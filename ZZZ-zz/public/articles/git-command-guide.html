@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>常见 Git 命令及使用指南</title>
+  <style>
+    /* 全局黑白灰配色，无任何彩色 */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+      background: #f5f5f5;
+      /* 浅灰背景 */
+      color: #000000;
+      /* 纯黑文字 */
+      line-height: 1.9;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    .article-shell {
+      background: #ffffff;
+      /* 纯白卡片 */
+      border: 1px solid #cccccc;
+      /* 灰色边框 */
+      padding: 36px;
+      box-shadow: none;
+      /* 去除阴影 */
+    }
+
+    h1,
+    h2 {
+      color: #000000;
+      /* 标题纯黑 */
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 32px;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 32px;
+    }
+
+    .meta {
+      color: #666666;
+      /* 灰色元信息 */
+      margin-bottom: 32px;
+      font-size: 14px;
+      border-left: 3px solid #cccccc;
+      padding-left: 12px;
+    }
+
+    p {
+      color: #000000;
+    }
+
+    pre {
+      background: #f8f8f8;
+      /* 浅灰代码背景 */
+      border: 1px solid #dddddd;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 6px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      color: #000000;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #000000;
+    }
+
+    a {
+      color: #000000;
+      text-decoration: underline;
+      text-decoration-color: #cccccc;
+    }
+
+    a:hover {
+      color: #555555;
+    }
+
+    /* 暗色模式支持（可选） */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .article-shell {
+        background: #2a2a2a;
+        border-color: #444444;
+      }
+
+      h1,
+      h2,
+      p {
+        color: #ffffff;
+      }
+
+      .meta {
+        color: #aaaaaa;
+        border-left-color: #666666;
+      }
+
+      pre {
+        background: #1e1e1e;
+        border-color: #444444;
+        color: #e0e0e0;
+      }
+
+      code {
+        background: #333333;
+        color: #f0f0f0;
+      }
+
+      a {
+        color: #ffffff;
+        text-decoration-color: #888888;
+      }
+
+      a:hover {
+        color: #cccccc;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="article-shell">
+      <h1>常见 Git 命令及使用指南</h1>
+      <div class="meta">发布于 2026-04-12</div>
+      <p>Git 是前端开发中最重要的协作工具之一。掌握常见命令不仅能提升日常效率，也能减少很多因为操作失误造成的返工。</p>
+      <h2>1. 初始化与克隆</h2>
+      <pre><code>git init
+git clone 仓库地址</code></pre>
+      <h2>2. 查看状态与提交</h2>
+      <pre><code>git status
+git add .
+git commit -m "feat: 完成文章搜索功能"</code></pre>
+      <h2>3. 分支相关</h2>
+      <pre><code>git branch
+git checkout -b feature/article-search
+git switch main</code></pre>
+      <h2>4. 拉取与推送</h2>
+      <pre><code>git pull origin main
+git push origin feature/article-search</code></pre>
+      <h2>5. 查看日志与差异</h2>
+      <pre><code>git log --oneline
+git diff
+git diff --staged</code></pre>
+      <h2>6. 常见建议</h2>
+      <p>提交信息尽量清晰、分支命名统一、冲突尽早解决、避免在不理解的情况下使用强制覆盖命令，这是团队协作里非常重要的习惯。</p>
+    </div>
+  </div>
+</body>
+
+</html>

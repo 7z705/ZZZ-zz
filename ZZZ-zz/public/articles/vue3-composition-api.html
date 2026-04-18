@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue 3 Composition API 实战与响应式原理</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+      background: #f5f5f5;
+      color: #000000;
+      line-height: 1.9;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    .article-shell {
+      background: #ffffff;
+      border: 1px solid #cccccc;
+      padding: 36px;
+      box-shadow: none;
+    }
+
+    h1,
+    h2 {
+      color: #000000;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 32px;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 32px;
+    }
+
+    .meta {
+      color: #666666;
+      margin-bottom: 32px;
+      font-size: 14px;
+      border-left: 3px solid #cccccc;
+      padding-left: 12px;
+    }
+
+    p {
+      color: #000000;
+    }
+
+    pre {
+      background: #f8f8f8;
+      border: 1px solid #dddddd;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 6px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      color: #000000;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #000000;
+      font-family: 'Consolas', monospace;
+    }
+
+    a {
+      color: #000000;
+      text-decoration: underline;
+      text-decoration-color: #cccccc;
+    }
+
+    a:hover {
+      color: #555555;
+    }
+
+    ul {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .article-shell {
+        background: #2a2a2a;
+        border-color: #444444;
+      }
+
+      h1,
+      h2,
+      p {
+        color: #ffffff;
+      }
+
+      .meta {
+        color: #aaaaaa;
+        border-left-color: #666666;
+      }
+
+      pre {
+        background: #1e1e1e;
+        border-color: #444444;
+        color: #e0e0e0;
+      }
+
+      code {
+        background: #333333;
+        color: #f0f0f0;
+      }
+
+      a {
+        color: #ffffff;
+        text-decoration-color: #888888;
+      }
+
+      a:hover {
+        color: #cccccc;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="article-shell">
+      <h1>Vue 3 Composition API 实战与响应式原理</h1>
+      <div class="meta">发布于 2026-04-12</div>
+      <p>Vue 3 的 Composition API 提供了一种更灵活的代码组织方式，尤其适合复杂组件。同时，Vue 3 基于 Proxy 的响应式系统比 Vue 2 的 Object.defineProperty 更强大。
+      </p>
+
+      <h2>1. Composition API 核心用法</h2>
+      <pre><code>&lt;script setup&gt;
+import { ref, reactive, computed, onMounted } from 'vue'
+
+const count = ref(0)
+const state = reactive({ name: 'Vue', version: 3 })
+const double = computed(() => count.value * 2)
+
+function increment() {
+  count.value++
+}
+
+onMounted(() => {
+  console.log('组件已挂载')
+})
+&lt;/script&gt;</code></pre>
+
+      <h2>2. 响应式原理：Proxy 与 Reflect</h2>
+      <p>Vue 3 使用 <code>new Proxy(target, handler)</code> 代理整个对象，可以拦截属性的读取、设置、删除等操作。配合 <code>Reflect</code>
+        完成默认行为，从而精确追踪依赖。</p>
+      <pre><code>const reactive = (obj) => {
+  return new Proxy(obj, {
+    get(target, key, receiver) {
+      track(target, key)  // 依赖收集
+      return Reflect.get(target, key, receiver)
+    },
+    set(target, key, value, receiver) {
+      const result = Reflect.set(target, key, value, receiver)
+      trigger(target, key) // 触发更新
+      return result
+    }
+  })
+}</code></pre>
+
+      <h2>3. 实战：可复用的组合式函数</h2>
+      <p>将逻辑抽离为 <code>useXxx</code> 函数，可以在多个组件间共享状态和行为。</p>
+      <pre><code>// useCounter.js
+import { ref } from 'vue'
+export function useCounter(initial = 0) {
+  const count = ref(initial)
+  const inc = () => count.value++
+  const dec = () => count.value--
+  return { count, inc, dec }
+}</code></pre>
+      <p>掌握 Composition API 能极大提升代码的可维护性和复用性，是现代化 Vue 开发的必备技能。</p>
+    </div>
+  </div>
+</body>
+
+</html>

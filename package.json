@@ -1,0 +1,61 @@
+{
+  "name": "tiny-blog",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "animate.css": "^4.1.1",
+    "axios": "^0.26.1",
+    "core-js": "^3.8.3",
+    "dayjs": "^1.11.0",
+    "element-ui": "^2.15.6",
+    "github-markdown-css": "^5.1.0",
+    "katex": "^0.15.3",
+    "less": "^4.1.2",
+    "less-loader": "^10.2.0",
+    "mavon-editor": "^2.10.4",
+    "prismjs": "^1.27.0",
+    "three": "^0.184.0",
+    "tocbot": "^4.18.2",
+    "vue": "^2.6.14",
+    "vue-masonry-css": "^1.0.3",
+    "vue-router": "^3.5.3",
+    "vuedraggable": "^2.24.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@types/prismjs": "^1.26.0",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "babel-plugin-component": "^1.1.1",
+    "babel-plugin-prismjs": "^2.1.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

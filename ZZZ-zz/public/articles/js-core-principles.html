@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS 的一些常用底层原理</title>
+  <style>
+    /* 全局黑白灰配色，无任何彩色 */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+      background: #f5f5f5;
+      /* 浅灰背景 */
+      color: #000000;
+      /* 纯黑文字 */
+      line-height: 1.9;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    .article-shell {
+      background: #ffffff;
+      /* 纯白卡片背景 */
+      border: 1px solid #cccccc;
+      /* 灰色边框 */
+      padding: 36px;
+      box-shadow: none;
+      /* 去除所有阴影 */
+    }
+
+    h1,
+    h2 {
+      color: #000000;
+      /* 标题纯黑 */
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 32px;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 32px;
+    }
+
+    .meta {
+      color: #666666;
+      /* 灰色元信息 */
+      margin-bottom: 32px;
+      font-size: 14px;
+      border-left: 3px solid #cccccc;
+      padding-left: 12px;
+    }
+
+    p {
+      color: #000000;
+    }
+
+    pre {
+      background: #f8f8f8;
+      /* 浅灰代码背景 */
+      border: 1px solid #dddddd;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 6px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      color: #000000;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #000000;
+      font-family: 'Consolas', monospace;
+    }
+
+    a {
+      color: #000000;
+      text-decoration: underline;
+      text-decoration-color: #cccccc;
+    }
+
+    a:hover {
+      color: #555555;
+    }
+
+    /* 暗色模式（可选） */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .article-shell {
+        background: #2a2a2a;
+        border-color: #444444;
+      }
+
+      h1,
+      h2,
+      p {
+        color: #ffffff;
+      }
+
+      .meta {
+        color: #aaaaaa;
+        border-left-color: #666666;
+      }
+
+      pre {
+        background: #1e1e1e;
+        border-color: #444444;
+        color: #e0e0e0;
+      }
+
+      code {
+        background: #333333;
+        color: #f0f0f0;
+      }
+
+      a {
+        color: #ffffff;
+        text-decoration-color: #888888;
+      }
+
+      a:hover {
+        color: #cccccc;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="article-shell">
+      <h1>JS 的一些常用底层原理</h1>
+      <div class="meta">发布于 2026-04-10</div>
+      <p>JavaScript 的底层原理并不只是面试题，它们会直接影响我们写业务代码时的判断与设计。真正理解原型链、作用域链、闭包、this 和事件循环，能让很多“玄学 bug”变得非常可解释。</p>
+      <h2>1. 原型链</h2>
+      <p>JavaScript 的对象查找属性时，会先查当前对象自身，如果没有，再沿着原型链逐级向上查找，直到 <code>null</code> 为止。这也是很多继承实现方式的基础。</p>
+      <pre><code>function Person(name) {
+  this.name = name
+}
+Person.prototype.sayHi = function () {
+  console.log('Hi, ' + this.name)
+}</code></pre>
+      <h2>2. 作用域链与闭包</h2>
+      <p>函数在定义时就确定了自己的词法作用域。闭包的本质，就是函数可以记住并访问它定义时所在作用域中的变量。</p>
+      <pre><code>function createCounter() {
+  let count = 0
+  return function () {
+    count++
+    return count
+  }
+}</code></pre>
+      <h2>3. this 指向</h2>
+      <p><code>this</code> 的指向取决于函数调用方式，而不是定义位置。常见绑定规则有默认绑定、隐式绑定、显式绑定和 new 绑定。</p>
+      <h2>4. 事件循环</h2>
+      <p>JavaScript 是单线程语言，异步任务依赖事件循环调度。宏任务和微任务的执行顺序，是我们处理 Promise、定时器和 DOM 更新时必须掌握的基础。</p>
+      <pre><code>console.log(1)
+setTimeout(() => console.log(2))
+Promise.resolve().then(() => console.log(3))
+console.log(4)</code></pre>
+      <p>输出顺序是：1、4、3、2。</p>
+      <h2>5. 为什么这些原理很重要</h2>
+      <p>当项目复杂度上来之后，理解底层原理能帮助我们写出更稳定、更易维护的代码，也能帮助我们在性能优化和问题排查时更快地定位根因。</p>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>uni-app 跨端开发最佳实践</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+      background: #f5f5f5;
+      color: #000000;
+      line-height: 1.9;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    .article-shell {
+      background: #ffffff;
+      border: 1px solid #cccccc;
+      padding: 36px;
+      box-shadow: none;
+    }
+
+    h1,
+    h2 {
+      color: #000000;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 32px;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 32px;
+    }
+
+    .meta {
+      color: #666666;
+      margin-bottom: 32px;
+      font-size: 14px;
+      border-left: 3px solid #cccccc;
+      padding-left: 12px;
+    }
+
+    p {
+      color: #000000;
+    }
+
+    pre {
+      background: #f8f8f8;
+      border: 1px solid #dddddd;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 6px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      color: #000000;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #000000;
+      font-family: 'Consolas', monospace;
+    }
+
+    a {
+      color: #000000;
+      text-decoration: underline;
+      text-decoration-color: #cccccc;
+    }
+
+    a:hover {
+      color: #555555;
+    }
+
+    ul {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .article-shell {
+        background: #2a2a2a;
+        border-color: #444444;
+      }
+
+      h1,
+      h2,
+      p {
+        color: #ffffff;
+      }
+
+      .meta {
+        color: #aaaaaa;
+        border-left-color: #666666;
+      }
+
+      pre {
+        background: #1e1e1e;
+        border-color: #444444;
+        color: #e0e0e0;
+      }
+
+      code {
+        background: #333333;
+        color: #f0f0f0;
+      }
+
+      a {
+        color: #ffffff;
+        text-decoration-color: #888888;
+      }
+
+      a:hover {
+        color: #cccccc;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="article-shell">
+      <h1>uni-app 跨端开发最佳实践</h1>
+      <div class="meta">发布于 2026-04-13</div>
+      <p>uni-app 是基于 Vue.js 的跨端框架，一套代码可发布到 iOS、Android、H5、以及各种小程序平台。本文总结了一些实际项目中的最佳实践。</p>
+
+      <h2>1. 条件编译处理平台差异</h2>
+      <p>使用 <code>#ifdef</code> 和 <code>#ifndef</code> 可以针对不同平台编写特定代码。</p>
+      <pre><code>&lt;!-- #ifdef H5 --&gt;
+&lt;view&gt;仅在 H5 显示&lt;/view&gt;
+&lt;!-- #endif --&gt;
+
+&lt;!-- #ifdef MP-WEIXIN --&gt;
+&lt;button open-type="getUserInfo"&gt;微信登录&lt;/button&gt;
+&lt;!-- #endif --&gt;</code></pre>
+
+      <h2>2. 使用 uni 提供的 API 适配多端</h2>
+      <p>所有以 <code>uni.</code> 开头的 API（如 <code>uni.request</code>、<code>uni.setStorage</code>）会自动适配不同端的底层实现。</p>
+
+      <h2>3. 页面与组件的生命周期</h2>
+      <p>uni-app 扩展了 Vue 的生命周期，增加了 <code>onLoad</code>、<code>onShow</code>、<code>onReady</code> 等页面专属钩子。</p>
+
+      <h2>4. 性能优化建议</h2>
+      <ul>
+        <li>减少 <code>&lt;scroll-view&gt;</code> 的嵌套层级，避免卡顿。</li>
+        <li>使用 <code>v-if</code> 替代 <code>v-show</code> 来减少隐藏节点的渲染开销。</li>
+        <li>对于长列表，使用 <code>recycle-list</code> 或虚拟滚动。</li>
+        <li>图片懒加载：<code>&lt;image lazy-load /&gt;</code>。</li>
+      </ul>
+      <pre><code>&lt;template&gt;
+  &lt;view&gt;
+    &lt;image :src="imgUrl" mode="widthFix" lazy-load&gt;&lt;/image&gt;
+  &lt;/view&gt;
+&lt;/template&gt;</code></pre>
+      <p>遵循这些最佳实践，可以显著提升 uni-app 项目的开发效率和运行性能。</p>
+    </div>
+  </div>
+</body>
+
+</html>

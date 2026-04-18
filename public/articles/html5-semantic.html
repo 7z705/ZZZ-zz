@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML5 语义化与 SEO 最佳实践</title>
+  <style>
+    /* 全局黑白灰配色，无任何彩色 */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+      background: #f5f5f5;
+      color: #000000;
+      line-height: 1.9;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    .article-shell {
+      background: #ffffff;
+      border: 1px solid #cccccc;
+      padding: 36px;
+      box-shadow: none;
+    }
+
+    h1,
+    h2 {
+      color: #000000;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 32px;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 32px;
+    }
+
+    .meta {
+      color: #666666;
+      margin-bottom: 32px;
+      font-size: 14px;
+      border-left: 3px solid #cccccc;
+      padding-left: 12px;
+    }
+
+    p {
+      color: #000000;
+    }
+
+    pre {
+      background: #f8f8f8;
+      border: 1px solid #dddddd;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 6px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      color: #000000;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #000000;
+      font-family: 'Consolas', monospace;
+    }
+
+    a {
+      color: #000000;
+      text-decoration: underline;
+      text-decoration-color: #cccccc;
+    }
+
+    a:hover {
+      color: #555555;
+    }
+
+    ul {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .article-shell {
+        background: #2a2a2a;
+        border-color: #444444;
+      }
+
+      h1,
+      h2,
+      p {
+        color: #ffffff;
+      }
+
+      .meta {
+        color: #aaaaaa;
+        border-left-color: #666666;
+      }
+
+      pre {
+        background: #1e1e1e;
+        border-color: #444444;
+        color: #e0e0e0;
+      }
+
+      code {
+        background: #333333;
+        color: #f0f0f0;
+      }
+
+      a {
+        color: #ffffff;
+        text-decoration-color: #888888;
+      }
+
+      a:hover {
+        color: #cccccc;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="article-shell">
+      <h1>HTML5 语义化与 SEO 最佳实践</h1>
+      <div class="meta">发布于 2026-04-10</div>
+      <p>HTML5 引入了许多新的语义化标签，如
+        <code>&lt;header&gt;</code>、<code>&lt;nav&gt;</code>、<code>&lt;main&gt;</code>、<code>&lt;article&gt;</code>、<code>&lt;section&gt;</code>、<code>&lt;aside&gt;</code>、<code>&lt;footer&gt;</code>
+        等。使用这些标签不仅能让代码结构更清晰，还能显著提升网页的 SEO 表现和可访问性。</p>
+
+      <h2>1. 什么是语义化标签？</h2>
+      <p>语义化标签指的是用标签本身就能表达内容含义，而不是单纯使用 <code>&lt;div&gt;</code> 和
+        <code>&lt;span&gt;</code>。例如：<code>&lt;article&gt;</code> 表示一篇独立的文章，<code>&lt;nav&gt;</code> 表示导航区域。</p>
+
+      <h2>2. 语义化对 SEO 的好处</h2>
+      <p>搜索引擎的爬虫会分析网页的 HTML 结构，语义化标签能帮助爬虫更准确地理解页面内容的层级和重点，从而提升关键词排名。同时，合理的
+        <code>&lt;h1&gt;</code>~<code>&lt;h6&gt;</code> 层次也是 SEO 的核心要素之一。</p>
+
+      <h2>3. 常用语义化标签示例</h2>
+      <pre><code>&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;网站标题&lt;/h1&gt;
+    &lt;nav&gt;导航链接&lt;/nav&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;article&gt;
+      &lt;h2&gt;文章标题&lt;/h2&gt;
+      &lt;p&gt;文章内容&lt;/p&gt;
+    &lt;/article&gt;
+  &lt;/main&gt;
+  &lt;aside&gt;侧边栏信息&lt;/aside&gt;
+  &lt;footer&gt;版权信息&lt;/footer&gt;
+&lt;/body&gt;</code></pre>
+
+      <h2>4. 实践建议</h2>
+      <ul>
+        <li>每个页面只使用一个 <code>&lt;h1&gt;</code>，且应包含页面的核心主题。</li>
+        <li>合理使用 <code>&lt;article&gt;</code>、<code>&lt;section&gt;</code> 区分内容区块。</li>
+        <li>为 <code>&lt;img&gt;</code> 添加有意义的 <code>alt</code> 属性。</li>
+        <li>使用 <code>&lt;time&gt;</code> 标签标注发布时间。</li>
+      </ul>
+      <p>通过遵循这些语义化实践，你的网站不仅对搜索引擎更友好，也能让辅助技术（如屏幕阅读器）更好地为用户服务。</p>
+    </div>
+  </div>
+</body>
+
+</html>

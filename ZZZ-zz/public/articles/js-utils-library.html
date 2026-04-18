@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript 常用工具函数库（防抖、深拷贝、日期格式化）</title>
+  <style>
+    /* 全局黑白灰配色，无任何彩色 */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+      background: #f5f5f5;
+      /* 浅灰背景 */
+      color: #000000;
+      /* 纯黑文字 */
+      line-height: 1.9;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    .article-shell {
+      background: #ffffff;
+      /* 纯白卡片背景 */
+      border: 1px solid #cccccc;
+      /* 灰色边框 */
+      padding: 36px;
+      box-shadow: none;
+      /* 去除所有阴影 */
+    }
+
+    h1,
+    h2 {
+      color: #000000;
+      /* 标题纯黑 */
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 32px;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 32px;
+    }
+
+    .meta {
+      color: #666666;
+      /* 灰色元信息 */
+      margin-bottom: 32px;
+      font-size: 14px;
+      border-left: 3px solid #cccccc;
+      padding-left: 12px;
+    }
+
+    p {
+      color: #000000;
+    }
+
+    pre {
+      background: #f8f8f8;
+      /* 浅灰代码背景 */
+      border: 1px solid #dddddd;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 6px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      color: #000000;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #000000;
+      font-family: 'Consolas', monospace;
+    }
+
+    a {
+      color: #000000;
+      text-decoration: underline;
+      text-decoration-color: #cccccc;
+    }
+
+    a:hover {
+      color: #555555;
+    }
+
+    /* 暗色模式 */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .article-shell {
+        background: #2a2a2a;
+        border-color: #444444;
+      }
+
+      h1,
+      h2,
+      p {
+        color: #ffffff;
+      }
+
+      .meta {
+        color: #aaaaaa;
+        border-left-color: #666666;
+      }
+
+      pre {
+        background: #1e1e1e;
+        border-color: #444444;
+        color: #e0e0e0;
+      }
+
+      code {
+        background: #333333;
+        color: #f0f0f0;
+      }
+
+      a {
+        color: #ffffff;
+        text-decoration-color: #888888;
+      }
+
+      a:hover {
+        color: #cccccc;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="article-shell">
+      <h1>JavaScript 常用工具函数库（防抖、深拷贝、日期格式化）</h1>
+      <div class="meta">发布于 2026-04-13</div>
+      <p>在业务开发中，工具函数可以帮助我们减少重复代码。一个质量不错的工具函数库，往往能直接提升项目开发效率。</p>
+      <h2>1. 防抖</h2>
+      <pre><code>function debounce(fn, delay = 300) {
+  let timer = null
+  return function (...args) {
+    clearTimeout(timer)
+    timer = setTimeout(() => fn.apply(this, args), delay)
+  }
+}</code></pre>
+      <h2>2. 深拷贝</h2>
+      <pre><code>function deepClone(obj) {
+  if (obj === null || typeof obj !== 'object') return obj
+  if (Array.isArray(obj)) return obj.map(item => deepClone(item))
+  const result = {}
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      result[key] = deepClone(obj[key])
+    }
+  }
+  return result
+}</code></pre>
+      <h2>3. 日期格式化</h2>
+      <pre><code>function formatDate(date = new Date()) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}</code></pre>
+      <h2>4. 使用建议</h2>
+      <p>工具函数不要盲目堆积。应该优先沉淀项目中真正高频复用、经过业务验证的函数，保持命名统一、行为可预测、边界处理清晰。</p>
+    </div>
+  </div>
+</body>
+
+</html>

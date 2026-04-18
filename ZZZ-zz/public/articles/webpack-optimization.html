@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webpack 5 性能优化：代码分割与懒加载</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+      background: #f5f5f5;
+      color: #000000;
+      line-height: 1.9;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    .article-shell {
+      background: #ffffff;
+      border: 1px solid #cccccc;
+      padding: 36px;
+      box-shadow: none;
+    }
+
+    h1,
+    h2 {
+      color: #000000;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 32px;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 32px;
+    }
+
+    .meta {
+      color: #666666;
+      margin-bottom: 32px;
+      font-size: 14px;
+      border-left: 3px solid #cccccc;
+      padding-left: 12px;
+    }
+
+    p {
+      color: #000000;
+    }
+
+    pre {
+      background: #f8f8f8;
+      border: 1px solid #dddddd;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 6px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      color: #000000;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #000000;
+      font-family: 'Consolas', monospace;
+    }
+
+    a {
+      color: #000000;
+      text-decoration: underline;
+      text-decoration-color: #cccccc;
+    }
+
+    a:hover {
+      color: #555555;
+    }
+
+    ul {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .article-shell {
+        background: #2a2a2a;
+        border-color: #444444;
+      }
+
+      h1,
+      h2,
+      p {
+        color: #ffffff;
+      }
+
+      .meta {
+        color: #aaaaaa;
+        border-left-color: #666666;
+      }
+
+      pre {
+        background: #1e1e1e;
+        border-color: #444444;
+        color: #e0e0e0;
+      }
+
+      code {
+        background: #333333;
+        color: #f0f0f0;
+      }
+
+      a {
+        color: #ffffff;
+        text-decoration-color: #888888;
+      }
+
+      a:hover {
+        color: #cccccc;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="article-shell">
+      <h1>Webpack 5 性能优化：代码分割与懒加载</h1>
+      <div class="meta">发布于 2026-04-14</div>
+      <p>Webpack 5 提供了强大的代码分割能力，可以将第三方库、公共模块和按需加载的页面拆分成独立的 chunk，从而减少首屏加载时间。</p>
+
+      <h2>1. 入口分割（Entry Points）</h2>
+      <p>配置多入口时，每个入口会生成独立的 bundle。</p>
+      <pre><code>module.exports = {
+  entry: {
+    main: './src/main.js',
+    admin: './src/admin.js'
+  }
+}</code></pre>
+
+      <h2>2. 使用 SplitChunksPlugin 提取公共代码</h2>
+      <pre><code>optimization: {
+  splitChunks: {
+    chunks: 'all',
+    cacheGroups: {
+      vendor: {
+        test: /[\\/]node_modules[\\/]/,
+        name: 'vendors',
+        priority: 10
+      },
+      common: {
+        minChunks: 2,
+        name: 'common',
+        priority: 5
+      }
+    }
+  }
+}</code></pre>
+
+      <h2>3. 动态导入（懒加载）</h2>
+      <p>使用 <code>import()</code> 语法实现路由级别的懒加载。</p>
+      <pre><code>// 路由配置
+const routes = [
+  {
+    path: '/about',
+    component: () => import('./views/About.vue')
+  }
+]</code></pre>
+
+      <h2>4. 预加载与预获取</h2>
+      <p>Webpack 支持魔法注释：<code>/* webpackPrefetch: true */</code> 和 <code>/* webpackPreload: true */</code> 来优化资源加载时机。
+      </p>
+      <pre><code>import(/* webpackPrefetch: true */ './Modal.vue')</code></pre>
+
+      <h2>5. 其他优化技巧</h2>
+      <ul>
+        <li>使用 <code>terser-webpack-plugin</code> 压缩 JS。</li>
+        <li>使用 <code>css-minimizer-webpack-plugin</code> 压缩 CSS。</li>
+        <li>设置 <code>devtool: 'source-map'</code> 仅在需要时启用。</li>
+        <li>使用 <code>cache: { type: 'filesystem' }</code> 持久化缓存。</li>
+      </ul>
+      <p>通过合理配置 Webpack，可以让你的应用加载速度提升数倍，用户体验大幅改善。</p>
+    </div>
+  </div>
+</body>
+
+</html>

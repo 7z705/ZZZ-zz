@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows/Mac 下配置 Node.js 开发环境的完整指南</title>
+  <style>
+    /* 全局黑白灰配色，无任何彩色 */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+      background: #f5f5f5;
+      /* 浅灰背景 */
+      color: #000000;
+      /* 纯黑文字 */
+      line-height: 1.9;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    .article-shell {
+      background: #ffffff;
+      /* 纯白卡片背景 */
+      border: 1px solid #cccccc;
+      /* 灰色边框 */
+      padding: 36px;
+      box-shadow: none;
+      /* 去除所有阴影 */
+    }
+
+    h1,
+    h2 {
+      color: #000000;
+      /* 标题纯黑 */
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 32px;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 32px;
+    }
+
+    .meta {
+      color: #666666;
+      /* 灰色元信息 */
+      margin-bottom: 32px;
+      font-size: 14px;
+      border-left: 3px solid #cccccc;
+      padding-left: 12px;
+    }
+
+    p {
+      color: #000000;
+    }
+
+    pre {
+      background: #f8f8f8;
+      /* 浅灰代码背景 */
+      border: 1px solid #dddddd;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 6px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      color: #000000;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #000000;
+      font-family: 'Consolas', monospace;
+    }
+
+    a {
+      color: #000000;
+      text-decoration: underline;
+      text-decoration-color: #cccccc;
+    }
+
+    a:hover {
+      color: #555555;
+    }
+
+    /* 暗色模式 */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .article-shell {
+        background: #2a2a2a;
+        border-color: #444444;
+      }
+
+      h1,
+      h2,
+      p {
+        color: #ffffff;
+      }
+
+      .meta {
+        color: #aaaaaa;
+        border-left-color: #666666;
+      }
+
+      pre {
+        background: #1e1e1e;
+        border-color: #444444;
+        color: #e0e0e0;
+      }
+
+      code {
+        background: #333333;
+        color: #f0f0f0;
+      }
+
+      a {
+        color: #ffffff;
+        text-decoration-color: #888888;
+      }
+
+      a:hover {
+        color: #cccccc;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="article-shell">
+      <h1>Windows/Mac 下配置 Node.js 开发环境的完整指南</h1>
+      <div class="meta">发布于 2026-04-11</div>
+      <p>无论是做 Vue、React 还是 Node 服务端开发，Node.js 环境都是前端工程化的基础。一个稳定的环境，可以让后续项目开发顺畅很多。</p>
+      <h2>1. 安装 Node.js</h2>
+      <p>Windows 推荐下载安装官方 LTS 版本；Mac 可以使用官网安装包，也可以使用 Homebrew 安装。</p>
+      <pre><code>brew install node</code></pre>
+      <h2>2. 验证是否安装成功</h2>
+      <pre><code>node -v
+npm -v</code></pre>
+      <h2>3. 推荐配置镜像</h2>
+      <p>国内开发环境建议为 npm 配置稳定镜像，以提升依赖安装速度。</p>
+      <pre><code>npm config set registry https://registry.npmmirror.com</code></pre>
+      <h2>4. 版本管理建议</h2>
+      <p>如果你需要维护多个项目，建议使用版本管理工具来切换不同 Node 版本。这样可以避免旧项目与新项目之间的环境冲突。</p>
+      <h2>5. 常见问题</h2>
+      <p>常见问题包括环境变量未生效、权限不足、镜像源失效、项目依赖锁文件冲突等。排查时优先确认 Node 与 npm 版本、镜像配置以及项目目录中的锁文件。</p>
+      <h2>6. 最终建议</h2>
+      <p>尽量统一团队 Node 版本，使用 LTS 版本开发，并在项目中通过文档说明推荐版本，这样能减少环境问题带来的沟通成本。</p>
+    </div>
+  </div>
+</body>
+
+</html>

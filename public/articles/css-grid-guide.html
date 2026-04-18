@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Grid 布局完全指南</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", sans-serif;
+      background: #f5f5f5;
+      color: #000000;
+      line-height: 1.9;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    .article-shell {
+      background: #ffffff;
+      border: 1px solid #cccccc;
+      padding: 36px;
+      box-shadow: none;
+    }
+
+    h1,
+    h2 {
+      color: #000000;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 32px;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 32px;
+    }
+
+    .meta {
+      color: #666666;
+      margin-bottom: 32px;
+      font-size: 14px;
+      border-left: 3px solid #cccccc;
+      padding-left: 12px;
+    }
+
+    p {
+      color: #000000;
+    }
+
+    pre {
+      background: #f8f8f8;
+      border: 1px solid #dddddd;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 6px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      color: #000000;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #000000;
+      font-family: 'Consolas', monospace;
+    }
+
+    a {
+      color: #000000;
+      text-decoration: underline;
+      text-decoration-color: #cccccc;
+    }
+
+    a:hover {
+      color: #555555;
+    }
+
+    ul {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .article-shell {
+        background: #2a2a2a;
+        border-color: #444444;
+      }
+
+      h1,
+      h2,
+      p {
+        color: #ffffff;
+      }
+
+      .meta {
+        color: #aaaaaa;
+        border-left-color: #666666;
+      }
+
+      pre {
+        background: #1e1e1e;
+        border-color: #444444;
+        color: #e0e0e0;
+      }
+
+      code {
+        background: #333333;
+        color: #f0f0f0;
+      }
+
+      a {
+        color: #ffffff;
+        text-decoration-color: #888888;
+      }
+
+      a:hover {
+        color: #cccccc;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="article-shell">
+      <h1>CSS Grid 布局完全指南</h1>
+      <div class="meta">发布于 2026-04-11</div>
+      <p>CSS Grid 布局是 W3C 推出的二维布局系统，可以同时处理行和列，彻底改变了我们设计网页布局的方式。相比 Flexbox 的一维布局，Grid 更适合做整体页面框架。</p>
+
+      <h2>1. 基本概念</h2>
+      <p>Grid 容器通过 <code>display: grid</code> 定义，其直接子元素成为网格项。可以使用 <code>grid-template-columns</code> 和
+        <code>grid-template-rows</code> 定义列宽和行高。</p>
+
+      <h2>2. 核心属性示例</h2>
+      <pre><code>.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 20px;
+}
+.item {
+  background: #eee;
+  padding: 20px;
+}</code></pre>
+
+      <h2>3. 常用布局模式</h2>
+      <ul>
+        <li><strong>圣杯布局</strong>：<code>grid-template-areas: "header header" "sidebar main" "footer footer";</code></li>
+        <li><strong>响应式卡片网格</strong>：<code>grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));</code></li>
+        <li><strong>内容居中</strong>：<code>place-items: center;</code></li>
+      </ul>
+
+      <h2>4. 结合媒体查询实现自适应</h2>
+      <pre><code>@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}</code></pre>
+      <p>CSS Grid 让复杂的响应式布局变得简单直观，是现代前端开发必须掌握的核心技能。</p>
+    </div>
+  </div>
+</body>
+
+</html>
