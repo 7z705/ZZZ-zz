@@ -12,7 +12,7 @@
       <router-link v-else :to="`/detail/${blogInfo.id}`">{{ blogInfo.title }}</router-link>
     </div>
     <div class="subtitle">
-      <div><i class="el-icon-edit-outline"></i><span> 发表于 {{blogInfo.createTime | dateFormat}}</span></div>
+      <div><i class="el-icon-edit-outline"></i></div>
       <div v-if="blogInfo.updateTime"><i class="el-icon-edit-outline"></i><span> 更新于 {{blogInfo.updateTime | dateFormat}}</span></div>
     </div>
     <p class="content">{{ blogInfo.description }}</p>

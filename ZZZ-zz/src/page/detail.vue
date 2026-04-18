@@ -10,8 +10,6 @@
                 </div>
                 <!-- 文章信息（发表时间、阅读次数等） -->
                 <div class="subtitle">
-                    <div><i class="el-icon-edit-outline"></i><span> 发表于 {{ blog.createTime | dateFormat }}</span></div>
-                    <div><i class="el-icon-edit-outline"></i><span> 更新于 {{ blog.updateTime | dateFormat }}</span></div>
                     <!-- <div><i class="el-icon-view"></i><span> 阅读次数 {{ blog.views }}</span></div> -->
                 </div>
                 <!-- 文章内容 -->
