@@ -1,16 +1,18 @@
 <template>
   <div id="app" :class="themeClass">
     <router-view />
+    <AIChat />
     <theme-toggle />
   </div>
 </template>
 
 <script>
 import ThemeToggle from './components/ThemeToggle.vue'
+import AIChat from '@/components/AIChat.vue'
 
 export default {
   name: 'App',
-  components: { ThemeToggle },
+  components: { ThemeToggle, AIChat },
   data() {
     return {
       theme: 'light'
