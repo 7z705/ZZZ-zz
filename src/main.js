@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime'
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -31,7 +32,7 @@ Vue.prototype.$http = axios
 
 import dayjs from 'dayjs'
 // 注册全局时间格式化过滤器
-Vue.filter('dateFormat', function(originTime, format='YYYY年MM月DD日 HH:mm:ss'){
+Vue.filter('dateFormat', function (originTime, format = 'YYYY年MM月DD日 HH:mm:ss') {
   return dayjs(originTime).format(format);
 })
 
@@ -52,12 +53,12 @@ import renderMathInElement from 'katex/contrib/auto-render/auto-render'
 // 定义自动渲染的配置参数,这些参数根据你的需求进行修改，下面的参数是官网上抄下来的
 const renderOption = {
   delimiters: [
-    {left: '$$', right: '$$', display: true},
-    {left: '$', right: '$', display: false},
-    {left: '\\(', right: '\\)', display: false},
-    {left: '\\[', right: '\\]', display: true}
+    { left: '$$', right: '$$', display: true },
+    { left: '$', right: '$', display: false },
+    { left: '\\(', right: '\\)', display: false },
+    { left: '\\[', right: '\\]', display: true }
   ],
-  throwOnError : false
+  throwOnError: false
 }
 
 // 挂载公式自动渲染函数到vue原型
@@ -71,6 +72,6 @@ new Vue({
   render: h => h(App),
   router,
   beforeCreate() {
-		Vue.prototype.$bus = this //安装全局事件总线
-	},
+    Vue.prototype.$bus = this //安装全局事件总线
+  },
 }).$mount('#app')
