@@ -119,15 +119,13 @@ export default {
         { label: '求职意向', value: '前端开发 | 随时到岗' }, { label: '实习经验', value: '2年' }
       ],
       skills: [
-        '熟练运用语义化标签、Flex/Grid 布局，掌握响应式适配；深入理解原型链、闭包、事件循环，熟练使用 Promise、async/await。',
-        '具备 TypeScript 实际项目开发经验，熟练使用接口定义、类型推断、泛型等特性。',
-        '熟练使用 Vue 全家桶，掌握响应式原理、组件通信、路由守卫、Vuex/Pinia、Composition API。',
-        '熟练使用 uni-app 进行跨端开发，掌握条件编译、移动端适配、文件下载预览。',
-        '遵循单一职责原则封装组件，熟练使用 Webpack 进行代码分割、懒加载等性能优化。',
-        '熟练使用 Axios 封装请求，掌握拦截器实现统一错误处理、Token 注入。',
-        '熟练使用 Git 进行分支管理、冲突解决，熟悉 Git Flow 工作流。',
-        '熟练使用虚拟滚动、懒加载、防抖节流优化性能，具备复杂业务系统开发经验。',
-        '熟练使用 GitHub Copilot、Cursor 等 AI 编程工具辅助开发与调试。'
+        '框架与跨端：Vue2/Vue3全家桶（响应式原理、组件通信、Composition API、Pinia）；uni-app跨端开发（条件编译、移动端适配、App原生能力集成）',
+        '语言基础：JavaScript（原型链、闭包、事件循环、Promise/async-await）；TypeScript（接口定义、类型推断、泛型',
+        '工程化：Webpack（代码分割/懒加载）；ESLint/Prettier代码规范；Git Flow工作流（分支管理、冲突解决、commit规范）；Vue CLI',
+        '性能优化：虚拟滚动、图片懒加载、防抖节流、自适应布局（rpx/vw/vh',
+        '复杂交互：HTML5拖拽API、树形表格、动态表单联动、文件预览（PDF/Office）、鼠标交互动效',
+        'AI驱动开发：熟练使用GitHub Copilot、Cursor、Codex辅助代码生成与调试；结合ChatGPT/DeepSeek进行技术方案调研、问题排查与代码优化；具备AI辅助项目架构设计与开发全流程实践经验',
+        '协作与工具：Axios封装（拦截器、Token注入）；Vercel部署；Less预处理器'
       ],
       personalKeywords: ['前端工程师', '两年实习经验', '企业级项目', 'Pad端开发', '后台管理系统', '流程管理系统', '跨端应用', '可视化图表'],
       selfEvaluation: '技术扎实、自学半年成功入行前端开发、具有实战项目开发经验\n学习能力强，喜欢学习新事物，团队荣誉感强，有明确的职业规划\n对工作充满热情，善于与团队沟通，吃苦耐劳，工作积极主动，适应能力强',
