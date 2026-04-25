@@ -289,36 +289,67 @@ export default {
   name: 'index',
   components: { blogSummary, FlipCard },
   mounted() {
-    window.addEventListener('scroll', this.handleScroll)
-    this.initHeroCanvas()
-    // 监听时间轴条目，实现滚动进入动画
-    this.visibleItems = new Array(this.currentAwards.length).fill(false);
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const index = entry.target.getAttribute('data-index');
-          if (index !== null) {
-            this.$set(this.visibleItems, parseInt(index), true);
-          }
-          observer.unobserve(entry.target); // 只触发一次
-        }
-      });
-    }, { threshold: 0.3 });
+    // 原有事件监听
+    window.addEventListener('scroll', this.handleScroll);
+    this.initHeroCanvas();
+    this.setSectionRefs();
+    this.updateActiveSection();
 
+    // 技术标签随机上下偏移（原有）
+    this.tagOffsets = this.heroTagList.map(() => (Math.random() - 0.5) * 50);
+
+    // 读取保存的语言设置（原有）
+    const savedLocale = localStorage.getItem('locale');
+    if (savedLocale && (savedLocale === 'zh' || savedLocale === 'en')) {
+      this.locale = savedLocale;
+    }
+
+    // 【修复】获奖时间轴滚动动画：确保进入页面立即显示可见条目
     this.$nextTick(() => {
       const items = document.querySelectorAll('.timeline-item');
+      if (!items.length) return;
+
+      // 根据当前获奖数量初始化 visibleItems 数组
+      this.visibleItems = new Array(items.length).fill(false);
+
+      // 创建 Intersection Observer（阈值 0.2，更易触发）
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute('data-index'));
+            if (!isNaN(index) && !this.visibleItems[index]) {
+              this.$set(this.visibleItems, index, true);
+            }
+            observer.unobserve(entry.target); // 只触发一次
+          }
+        });
+      }, { threshold: 0.2 });
+
+      // 观察每个时间轴条目，并记录索引
       items.forEach((el, idx) => {
         el.setAttribute('data-index', idx);
         observer.observe(el);
       });
+
+      // 关键修复：手动调用 takeRecords() 检测已经可见的条目，使其立即显示
+      const records = observer.takeRecords();
+      records.forEach(record => {
+        if (record.isIntersecting) {
+          const idx = record.target.getAttribute('data-index');
+          if (idx !== null && !this.visibleItems[parseInt(idx)]) {
+            this.$set(this.visibleItems, parseInt(idx), true);
+          }
+          observer.unobserve(record.target);
+        }
+      });
     });
-    this.setSectionRefs()
-    this.updateActiveSection()
-    this.tagOffsets = this.heroTagList.map(() => (Math.random() - 0.5) * 50)
-    // 加载保存的语言设置
-    const savedLocale = localStorage.getItem('locale')
-    if (savedLocale && (savedLocale === 'zh' || savedLocale === 'en')) {
-      this.locale = savedLocale
+  },
+  watch: {
+    locale() {
+      this.$nextTick(() => {
+        this.visibleItems = new Array(this.currentAwards.length).fill(false);
+        this.initTimelineObserver(); // 封装的 observer 初始化函数
+      });
     }
   },
   beforeDestroy() {
@@ -328,6 +359,7 @@ export default {
   },
   data() {
     return {
+      visibleItems: [],  // 保留，但会在 mounted 中动态初始化长度
       navClass: 'header-nav-top',
       activeSection: 'about',
       locale: 'zh', // 当前语言 zh/en
@@ -453,7 +485,7 @@ export default {
         {
           date: '2023.12',
           title: '英语四级证书（CET-4）',
-          description: '成绩 559 分',
+          // description: '成绩 559 分',
           issuer: '全国大学英语四六级考试委员会'
         },
         {
