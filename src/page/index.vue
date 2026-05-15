@@ -372,7 +372,7 @@ export default {
           emptyBlog: '无匹配文章，试试换个关键词吧',
           hero: { greeting: 'HELLO，我是 ZZZ-zz', github: 'GitHub', resume: '查看简历' },
           aboutCards: {
-            personal: { title: '个人介绍', role: '前端开发', summary: '两年实习经验，随时到岗', detailTitle: '详细', detail: '目前就读于郑州轻工业大学，全日制统招本科，今年6月份毕业，有英语四级证书，两年实习经验，可随时到岗。' },
+            personal: { title: '个人介绍', role: '前端开发', summary: '一年实习经验，随时到岗', detailTitle: '详细', detail: '目前就读于郑州轻工业大学，全日制统招本科，今年6月份毕业，有英语四级证书，一年实习经验，可随时到岗。' },
             basic: { title: '基本信息', summary: '求职前端开发', detailTitle: '详细信息' },
             education: { title: '教育背景', school: '郑州轻工业大学', summary: '网络工程 · 2026届', detailTitle: '教育经历' },
             self: { title: '自我评价', subtitle: '技术扎实 · 热爱学习', summary: '团队荣誉感强', detailTitle: '自我评价详情' },
@@ -441,14 +441,14 @@ export default {
         'AI-driven Development: Proficient with GitHub Copilot, Cursor, Codex for code generation/debugging; Using ChatGPT/DeepSeek for tech research, troubleshooting and optimization; Full-cycle AI-assisted architecture design',
         'Collaboration & Tools: Axios wrapper (Interceptors, token injection); Vercel deployment; Less preprocessor'
       ],
-      personalKeywordsZh: ['前端工程师', '两年实习经验', '企业级项目', 'Pad端开发', '后台管理系统', '流程管理系统', '跨端应用', '可视化图表'],
+      personalKeywordsZh: ['前端工程师', '一年实习经验', '企业级项目', 'Pad端开发', '后台管理系统', '流程管理系统', '跨端应用', '可视化图表'],
       personalKeywordsEn: ['Frontend Engineer', '2-year Internship', 'Enterprise Projects', 'Pad Development', 'Admin Systems', 'Workflow Systems', 'Cross-platform Apps', 'Data Visualization'],
       selfEvaluationZh: '技术扎实、自学半年成功入行前端开发、具有实战项目开发经验\n学习能力强，喜欢学习新事物，团队荣誉感强，有明确的职业规划\n对工作充满热情，善于与团队沟通，吃苦耐劳，工作积极主动，适应能力强',
       selfEvaluationEn: 'Solid technical skills, successfully transitioned to frontend development through self-study for half a year, with practical project experience.\nStrong learning ability, enjoy exploring new technologies, strong sense of team honor, clear career plan.\nPassionate about work, good team communication, hardworking, proactive, highly adaptable.',
       internshipsZh: [
         {
           title: '北京北大软件工程股份有限公司',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           company: '国企人力资源研发部--第二研发中心',
           description: '主要公司h5系统日常维护和需求开发，同时深度参与了两个uni-app系统从0到1的前端任务开发'
         }
@@ -456,7 +456,7 @@ export default {
       internshipsEn: [
         {
           title: 'Beijing Beida Software Engineering Co., Ltd.',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           company: 'State-owned Enterprise HR R&D Dept - Second R&D Center',
           description: 'Mainly responsible for daily maintenance and feature development of company H5 systems, and deeply participated in frontend development of two uni-app systems from 0 to 1.'
         }
@@ -544,7 +544,7 @@ export default {
       projectsZh: [
         {
           title: '项目一：中海油领导端 Pad 系统',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           stack: 'uni-app、Vue.js、scroll-view、ECharts、lodash、Promise.all',
           description: '面向领导层使用的 Pad 端干部管理与审查系统，提供材料审核、关注管理、干部画像、任免跟踪、反查追溯等功能，支持多维度干部信息展示与操作，提升领导决策效率。',
           highlights: ['Pad 端系统', '复杂业务联调', '多模块协同开发'],
@@ -559,7 +559,7 @@ export default {
         },
         {
           title: '项目二：中海油干部考察系统（Pad/PC端）',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           stack: 'uni-app、Vue.js、JavaScript、HTML5/CSS3、ECharts、lodash、Vuex',
           description: '面向央企干部考察工作的移动端与PC端综合管理平台，支持考察任务管理、干部名册联动、谈话记录、人员状态筛选、锁定控制、多端适配等功能，提升干部考察工作的信息化与规范化水平',
           highlights: [
@@ -579,7 +579,7 @@ export default {
         },
         {
           title: '项目三：干部任免与假勤管理系统（多项目整合）',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           stack: 'Vue.js、JavaScript、HTML5/CSS3、HTML5拖拽API',
           description: '面向企业干部任免全流程与员工假勤管理的综合系统，涵盖模拟任免、竞聘管理、考察录入、任职回写、流程集成等模块，支持多场景下的权限控制与数据联动，提升组织人事管理效率',
           highlights: [
@@ -621,7 +621,7 @@ export default {
       projectsEn: [
         {
           title: 'Project 1: CNOOC Leadership Pad System',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           stack: 'uni-app, Vue.js, scroll-view, ECharts, lodash, Promise.all',
           description: 'Pad-based cadre management and review system for leadership, providing material review, follow management, cadre profiling, appointment tracking, and reverse tracing, enhancing decision-making efficiency.',
           highlights: ['Pad System', 'Complex Business Integration', 'Multi-module Collaboration'],
@@ -636,7 +636,7 @@ export default {
         },
         {
           title: 'Project 2: CNOOC Cadre Assessment System (Pad/PC)',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           stack: 'uni-app, Vue.js, JavaScript, HTML5/CSS3, ECharts, lodash, Vuex',
           description: 'Mobile and PC integrated management platform for cadre assessment in SOEs, supporting task management, cadre roster linkage, interview records, status filtering, lock control, and multi-platform adaptation.',
           highlights: ['Multi-file preview', 'Position & table dynamic refresh', 'QR & email integration', 'Pad/H5 exit logic', 'Lock/unlock state management', 'Pagination settings'],
@@ -653,7 +653,7 @@ export default {
         },
         {
           title: 'Project 3: Cadre Appointment & Attendance Management System',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           stack: 'Vue.js, JavaScript, HTML5/CSS3, HTML5 Drag & Drop API',
           description: 'Comprehensive system covering end-to-end cadre appointment and employee attendance management, including模拟 appointment, competition management, assessment entry, appointment write-back, and process integration.',
           highlights: ['Drag & drop with real-time data sync', 'Dynamic tree table with row merge', 'Form-table联动 calculation', 'Dynamic edit permission control', 'Exclusive edit with state isolation', 'OA process integration'],

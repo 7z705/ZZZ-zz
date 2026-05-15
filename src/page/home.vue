@@ -2,7 +2,7 @@
   <div class="home-container">
     <div class="hero-section">
       <h1 class="hero-title">Hi, 我是 <span class="highlight">郑瞄瞄</span></h1>
-      <p class="hero-sub">前端开发工程师 · 两年实习经验 · 随时到岗</p>
+      <p class="hero-sub">前端开发工程师 · 一年实习经验 · 随时到岗</p>
       <div class="hero-badge">✨ 保持好奇，持续创造</div>
     </div>
 
@@ -10,7 +10,7 @@
       <div class="left-area">
         <div class="card intro-card">
           <div class="card-header"><i class="el-icon-user"></i> 关于我</div>
-          <div class="intro-text">目前就读于郑州轻工业大学，全日制统招本科，今年6月份毕业，有英语四级证书，两年实习经验，可随时到岗。</div>
+          <div class="intro-text">目前就读于郑州轻工业大学，全日制统招本科，今年6月份毕业，有英语四级证书，一年实习经验，可随时到岗。</div>
         </div>
         <div class="card info-card">
           <div class="card-header"><i class="el-icon-document"></i> 基本信息</div>
@@ -127,7 +127,7 @@ export default {
         'AI驱动开发：熟练使用GitHub Copilot、Cursor、Codex辅助代码生成与调试；结合ChatGPT/DeepSeek进行技术方案调研、问题排查与代码优化；具备AI辅助项目架构设计与开发全流程实践经验',
         '协作与工具：Axios封装（拦截器、Token注入）；Vercel部署；Less预处理器'
       ],
-      personalKeywords: ['前端工程师', '两年实习经验', '企业级项目', 'Pad端开发', '后台管理系统', '流程管理系统', '跨端应用', '可视化图表'],
+      personalKeywords: ['前端工程师', '一年实习经验', '企业级项目', 'Pad端开发', '后台管理系统', '流程管理系统', '跨端应用', '可视化图表'],
       selfEvaluation: '技术扎实、自学半年成功入行前端开发、具有实战项目开发经验\n学习能力强，喜欢学习新事物，团队荣誉感强，有明确的职业规划\n对工作充满热情，善于与团队沟通，吃苦耐劳，工作积极主动，适应能力强',
       portfolio: {
         githubUrl: 'https://github.com/7z705',

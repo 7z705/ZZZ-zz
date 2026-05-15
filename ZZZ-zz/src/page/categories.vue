@@ -55,7 +55,7 @@ export default {
       internships: [
         {
           title: '北京北大软件工程股份有限公司',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           company: '国企人力资源研发部--第二研发中心',
           description: '主要公司h5系统日常维护和需求开发，同时深度参与了两个uni-app系统从0到1的前端任务开发'
         }
@@ -63,7 +63,7 @@ export default {
       projects: [
         {
           title: '项目一：中海油领导端 Pad 系统',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           stack: 'uni-app、Vue.js、scroll-view、ECharts、lodash、Promise.all',
           description: '面向领导层使用的 Pad 端干部管理与审查系统，提供材料审核、关注管理、干部画像、任免跟踪、反查追溯等功能，支持多维度干部信息展示与操作，提升领导决策效率。',
           highlights: ['Pad 端系统', '复杂业务联调', '多模块协同开发'],
@@ -78,7 +78,7 @@ export default {
         },
         {
           title: '项目二：中海油干部考察系统（Pad/PC端）',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           stack: 'uni-app、Vue.js、JavaScript、HTML5/CSS3、ECharts、lodash、Vuex',
           description: '面向央企干部考察工作的移动端与PC端综合管理平台，支持考察任务管理、干部名册联动、谈话记录、人员状态筛选、锁定控制、多端适配等功能，提升干部考察工作的信息化与规范化水平',
           highlights: [
@@ -102,7 +102,7 @@ export default {
         },
         {
           title: '项目三：干部任免与假勤管理系统（多项目整合）',
-          time: '2024.03-2026.03',
+          time: '2025.03-2026.03',
           stack: 'Vue.js、JavaScript、HTML5/CSS3、HTML5拖拽API',
           description: '面向企业干部任免全流程与员工假勤管理的综合系统，涵盖模拟任免、竞聘管理、考察录入、任职回写、流程集成等模块，支持多场景下的权限控制与数据联动，提升组织人事管理效率',
           highlights: [
