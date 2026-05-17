@@ -116,7 +116,7 @@ export default {
         { label: '姓名', value: '郑瞄瞄' }, { label: '电话', value: '18737151171' },
         { label: '年龄', value: '22' }, { label: '性别', value: '女' },
         { label: '学历', value: '统招本科 | 全日制' }, { label: '邮箱', value: '2831639494@qq.com' },
-        { label: '求职意向', value: '前端开发 | 随时到岗' }, { label: '实习经验', value: '2年' }
+        { label: '求职意向', value: '前端开发 | 随时到岗' }, { label: '实习经验', value: '1年' }
       ],
       skills: [
         '框架与跨端：Vue2/Vue3全家桶（响应式原理、组件通信、Composition API、Pinia）；uni-app跨端开发（条件编译、移动端适配、App原生能力集成）',

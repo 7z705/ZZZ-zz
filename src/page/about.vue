@@ -154,7 +154,7 @@ export default {
                 education: '统招本科 | 全日制',
                 email: '2831639494@qq.com',
                 jobIntent: '前端开发 | 随时到岗',
-                internshipYears: '2年',
+                internshipYears: '1年',
                 githubUrl: 'https://github.com/7z705',
                 githubText: 'github.com/7z705',
                 resumeUrl: '/resume.pdf',

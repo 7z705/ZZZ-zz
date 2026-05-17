@@ -304,44 +304,9 @@ export default {
       this.locale = savedLocale;
     }
 
-    // 【修复】获奖时间轴滚动动画：确保进入页面立即显示可见条目
+    // 获奖时间轴滚动动画
     this.$nextTick(() => {
-      const items = document.querySelectorAll('.timeline-item');
-      if (!items.length) return;
-
-      // 根据当前获奖数量初始化 visibleItems 数组
-      this.visibleItems = new Array(items.length).fill(false);
-
-      // 创建 Intersection Observer（阈值 0.2，更易触发）
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const index = parseInt(entry.target.getAttribute('data-index'));
-            if (!isNaN(index) && !this.visibleItems[index]) {
-              this.$set(this.visibleItems, index, true);
-            }
-            observer.unobserve(entry.target); // 只触发一次
-          }
-        });
-      }, { threshold: 0.2 });
-
-      // 观察每个时间轴条目，并记录索引
-      items.forEach((el, idx) => {
-        el.setAttribute('data-index', idx);
-        observer.observe(el);
-      });
-
-      // 关键修复：手动调用 takeRecords() 检测已经可见的条目，使其立即显示
-      const records = observer.takeRecords();
-      records.forEach(record => {
-        if (record.isIntersecting) {
-          const idx = record.target.getAttribute('data-index');
-          if (idx !== null && !this.visibleItems[parseInt(idx)]) {
-            this.$set(this.visibleItems, parseInt(idx), true);
-          }
-          observer.unobserve(record.target);
-        }
-      });
+      this.initTimelineObserver();
     });
   },
   watch: {
@@ -394,7 +359,7 @@ export default {
           emptyBlog: 'No matching articles, try different keywords',
           hero: { greeting: 'HELLO, I am ZZZ-zz', github: 'GitHub', resume: 'View Resume' },
           aboutCards: {
-            personal: { title: 'Introduction', role: 'Frontend Dev', summary: '2 years internship, immediate start', detailTitle: 'Details', detail: 'Currently studying at Zhengzhou University of Light Industry, full-time undergraduate, graduating in June. CET-4 certified, 2 years internship experience, available immediately.' },
+            personal: { title: 'Introduction', role: 'Frontend Dev', summary: '1 year internship, immediate start', detailTitle: 'Details', detail: 'Currently studying at Zhengzhou University of Light Industry, full-time undergraduate, graduating in June. CET-4 certified, 1 year internship experience, available immediately.' },
             basic: { title: 'Basic Info', summary: 'Looking for Frontend Dev', detailTitle: 'Details' },
             education: { title: 'Education', school: 'Zhengzhou University of Light Industry', summary: 'Network Eng · Class of 2026', detailTitle: 'Education' },
             self: { title: 'Self Evaluation', subtitle: 'Solid Skills · Love Learning', summary: 'Strong Team Spirit', detailTitle: 'Self Evaluation' },
@@ -442,7 +407,7 @@ export default {
         'Collaboration & Tools: Axios wrapper (Interceptors, token injection); Vercel deployment; Less preprocessor'
       ],
       personalKeywordsZh: ['前端工程师', '一年实习经验', '企业级项目', 'Pad端开发', '后台管理系统', '流程管理系统', '跨端应用', '可视化图表'],
-      personalKeywordsEn: ['Frontend Engineer', '2-year Internship', 'Enterprise Projects', 'Pad Development', 'Admin Systems', 'Workflow Systems', 'Cross-platform Apps', 'Data Visualization'],
+      personalKeywordsEn: ['Frontend Engineer', '1-year Internship', 'Enterprise Projects', 'Pad Development', 'Admin Systems', 'Workflow Systems', 'Cross-platform Apps', 'Data Visualization'],
       selfEvaluationZh: '技术扎实、自学半年成功入行前端开发、具有实战项目开发经验\n学习能力强，喜欢学习新事物，团队荣誉感强，有明确的职业规划\n对工作充满热情，善于与团队沟通，吃苦耐劳，工作积极主动，适应能力强',
       selfEvaluationEn: 'Solid technical skills, successfully transitioned to frontend development through self-study for half a year, with practical project experience.\nStrong learning ability, enjoy exploring new technologies, strong sense of team honor, clear career plan.\nPassionate about work, good team communication, hardworking, proactive, highly adaptable.',
       internshipsZh: [
@@ -808,6 +773,40 @@ export default {
     getAwardIcon(idx) {
       const icons = ['🏆', '🎖️', '📜', '⭐', '🏅', '✨'];
       return icons[idx % icons.length];
+    },
+    initTimelineObserver() {
+      const items = document.querySelectorAll('.timeline-item');
+      if (!items.length) return;
+
+      this.visibleItems = new Array(items.length).fill(false);
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute('data-index'));
+            if (!isNaN(index) && !this.visibleItems[index]) {
+              this.$set(this.visibleItems, index, true);
+            }
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      items.forEach((el, idx) => {
+        el.setAttribute('data-index', idx);
+        observer.observe(el);
+      });
+
+      const records = observer.takeRecords();
+      records.forEach(record => {
+        if (record.isIntersecting) {
+          const idx = record.target.getAttribute('data-index');
+          if (idx !== null && !this.visibleItems[parseInt(idx)]) {
+            this.$set(this.visibleItems, parseInt(idx), true);
+          }
+          observer.unobserve(record.target);
+        }
+      });
     },
     toggleLanguage() {
       this.locale = this.locale === 'zh' ? 'en' : 'zh'
@@ -1344,7 +1343,7 @@ export default {
   font-style: italic;
 }
 .skill-back h4 {
-  color: #1E293B !important;
+  color: var(--text-primary) !important;
 }
 .skill-list-full {
   display: flex;
@@ -1386,6 +1385,14 @@ export default {
 .info-value {
   font-weight: 600;
   text-align: right;
+  color: var(--text-primary);
+}
+.email-link {
+  color: var(--text-accent);
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 .self-text {
   white-space: pre-line;
@@ -1582,9 +1589,9 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.6), transparent);
+    background: linear-gradient(to bottom, var(--text-accent), transparent);
     animation: flowLight 3s infinite linear;
-    opacity: 0.6;
+    opacity: 0.15;
   }
 }
 
