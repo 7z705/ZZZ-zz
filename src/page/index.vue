@@ -8,7 +8,7 @@
           :key="item.key"
           class="nav-item"
           :class="{ active: activeSection === item.key }"
-          @click="scrollToSection(item.key)">
+          @click="item.type === 'scroll' ? scrollToSection(item.key) : $router.push(item.path)">
           <i :class="item.icon"></i>
           <span>{{ t(`nav.${item.key}`) }}</span>
         </div>
@@ -278,16 +278,141 @@
         </div>
       </div>
     </section>
+
+    <!-- 访问统计区块 -->
+    <section class="content-section" ref="statsSection" id="stats">
+      <div class="section-container">
+        <h2 class="section-title reveal-up">{{ t('sections.stats') }}</h2>
+        <p class="section-sub reveal-up">{{ t('stats.subtitle') }}</p>
+
+        <div class="overview-cards">
+          <div class="stat-card reveal-up" v-for="(card, i) in overviewCards" :key="card.label" :style="{ transitionDelay: i * 0.1 + 's' }">
+            <div class="card-icon">
+              <i :class="card.icon"></i>
+            </div>
+            <div class="card-body">
+              <div class="card-value"><AnimatedCount :target="card.value" :duration="1500" /></div>
+              <div class="card-label">{{ card.label }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-box reveal-up">
+            <h3><i class="el-icon-star-on"></i> {{ t('stats.topArticles') }}</h3>
+            <StatsBar :items="topArticles" />
+          </div>
+          <div class="chart-box reveal-up" style="transition-delay: 0.15s">
+            <h3><i class="el-icon-pie-chart"></i> {{ t('stats.categoryChart') }}</h3>
+            <StatsCircle :segments="categorySegments" />
+          </div>
+        </div>
+
+        <div class="chart-box reveal-up" style="margin-top: 24px">
+          <h3><i class="el-icon-view"></i> {{ t('stats.pageViews') }}</h3>
+          <StatsBar :items="pageViewItems" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 在线演示区块 -->
+    <section class="content-section" ref="playgroundSection" id="playground">
+      <div class="section-container">
+        <h2 class="section-title reveal-up">{{ t('sections.playground') }}</h2>
+        <p class="section-sub reveal-up">交互式 Demo，展示技术能力</p>
+
+        <div class="demo-tabs reveal-up">
+          <span
+            v-for="tab in playgroundTabs"
+            :key="tab.key"
+            class="demo-tab"
+            :class="{ active: playgroundTab === tab.key }"
+            @click="playgroundTab = tab.key"
+          >
+            <i :class="tab.icon"></i> {{ tab.label }}
+          </span>
+        </div>
+
+        <div class="demo-content reveal-up" style="transition-delay: 0.1s">
+          <keep-alive>
+            <ParticlePlayground v-if="playgroundTab === 'particles'" />
+            <DragDropDemo v-if="playgroundTab === 'dragdrop'" />
+          </keep-alive>
+        </div>
+      </div>
+    </section>
+
+    <!-- 滚动进度条 -->
+    <div class="scroll-progress" :style="{ width: scrollProgress + '%' }"></div>
+
+    <!-- 侧边导航点 -->
+    <div class="side-dots" v-show="scrollY > 300">
+      <div
+        v-for="dot in sideDots"
+        :key="dot.key"
+        class="side-dot"
+        :class="{ active: activeSection === dot.key }"
+        @click="scrollToSection(dot.key)"
+        :title="t(`nav.${dot.key}`)"
+      ></div>
+    </div>
+
+    <!-- 回到顶部 -->
+    <div class="back-to-top" v-show="scrollY > 600" @click="scrollToTop">
+      <i class="el-icon-top"></i>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-links">
+          <a href="https://github.com/7z705" target="_blank"><i class="el-icon-s-cooperation"></i> GitHub</a>
+          <a href="mailto:2831639494@qq.com"><i class="el-icon-message"></i> 2831639494@qq.com</a>
+          <a :href="portfolio.resumeUrl" target="_blank"><i class="el-icon-document"></i> 在线简历</a>
+        </div>
+        <div class="footer-copy">© 2026 ZZZ-zz · Built with Vue + Element UI</div>
+      </div>
+    </footer>
   </div>
 </template>
 
 <script>
 import blogSummary from '../components/blogSummary.vue'
 import FlipCard from '../components/FlipCard.vue'
+import StatsBar from '../components/StatsBar.vue'
+import StatsCircle from '../components/StatsCircle.vue'
+import ParticlePlayground from '../components/ParticlePlayground.vue'
+import DragDropDemo from '../components/DragDropDemo.vue'
+
+const AnimatedCount = {
+  props: { target: Number, duration: { type: Number, default: 1500 } },
+  data() { return { current: 0 } },
+  mounted() { this.animate() },
+  methods: {
+    animate() {
+      const start = performance.now()
+      const step = (ts) => {
+        const elapsed = ts - start
+        const p = Math.min(elapsed / this.duration, 1)
+        this.current = Math.round(p * this.target)
+        if (p < 1) requestAnimationFrame(step)
+      }
+      requestAnimationFrame(step)
+    }
+  },
+  render(h) { return h('span', this.current) }
+}
+
+function getStats() {
+  try {
+    const raw = localStorage.getItem('blog_stats')
+    return raw ? JSON.parse(raw) : null
+  } catch { return null }
+}
 
 export default {
   name: 'index',
-  components: { blogSummary, FlipCard },
+  components: { blogSummary, FlipCard, StatsBar, StatsCircle, ParticlePlayground, DragDropDemo, AnimatedCount },
   mounted() {
     // 原有事件监听
     window.addEventListener('scroll', this.handleScroll);
@@ -304,17 +429,26 @@ export default {
       this.locale = savedLocale;
     }
 
-    // 获奖时间轴滚动动画
+    // 获奖时间轴滚动动画 + 滚动揭示动画
     this.$nextTick(() => {
       this.initTimelineObserver();
+      this.initRevealObserver();
     });
   },
   watch: {
     locale() {
       this.$nextTick(() => {
         this.visibleItems = new Array(this.currentAwards.length).fill(false);
-        this.initTimelineObserver(); // 封装的 observer 初始化函数
+        this.initTimelineObserver();
       });
+    },
+    '$route.path'(path) {
+      const routeItem = this.navItems.find(item => item.type === 'route' && path.startsWith(item.path))
+      if (routeItem) {
+        this.activeSection = routeItem.key
+      } else if (path === '/home' || path === '/') {
+        this.updateActiveSection()
+      }
     }
   },
   beforeDestroy() {
@@ -331,8 +465,22 @@ export default {
       // 国际化文本库
       messages: {
         zh: {
-          nav: { about: '关于', archives: '博客文章', categories: '项目/实习' },
-          sections: { about: '关于我', blog: '博客文章', experience: '项目 / 实习经历' },
+          nav: { about: '关于', archives: '博客文章', categories: '项目/实习', stats: '访问统计', playground: '在线演示' },
+          sections: { about: '关于我', blog: '博客文章', experience: '项目 / 实习经历', stats: '访问统计', playground: '在线演示' },
+          stats: {
+            subtitle: '博客浏览数据一览',
+            topArticles: '热门文章 Top 5',
+            categoryChart: '分类文章分布',
+            pageViews: '页面访问分布',
+            totalVisits: '总访问量',
+            articleCount: '文章总数',
+            catTagCount: '分类/标签',
+            demoCount: '在线演示'
+          },
+          playground: {
+            particles: '粒子系统',
+            dragdrop: '拖拽看板'
+          },
           searchPlaceholder: '搜索文章...',
           emptyBlog: '无匹配文章，试试换个关键词吧',
           hero: { greeting: 'HELLO，我是 ZZZ-zz', github: 'GitHub', resume: '查看简历' },
@@ -353,8 +501,22 @@ export default {
           }
         },
         en: {
-          nav: { about: 'About', archives: 'Blog', categories: 'Projects' },
-          sections: { about: 'About Me', blog: 'Blog Posts', experience: 'Projects / Internships' },
+          nav: { about: 'About', archives: 'Blog', categories: 'Projects', stats: 'Stats', playground: 'Playground' },
+          sections: { about: 'About Me', blog: 'Blog Posts', experience: 'Projects / Internships', stats: 'Site Stats', playground: 'Playground' },
+          stats: {
+            subtitle: 'Blog Statistics Overview',
+            topArticles: 'Top 5 Articles',
+            categoryChart: 'Category Distribution',
+            pageViews: 'Page View Distribution',
+            totalVisits: 'Total Visits',
+            articleCount: 'Total Articles',
+            catTagCount: 'Categories/Tags',
+            demoCount: 'Demos'
+          },
+          playground: {
+            particles: 'Particle System',
+            dragdrop: 'Drag & Drop'
+          },
           searchPlaceholder: 'Search articles...',
           emptyBlog: 'No matching articles, try different keywords',
           hero: { greeting: 'HELLO, I am ZZZ-zz', github: 'GitHub', resume: 'View Resume' },
@@ -686,7 +848,10 @@ export default {
       animationFrame: null,
       searchKeyword: '',
       heroTagList: ['HTML', 'CSS', 'JavaScript', 'Vue 2/3', 'Node.js', 'Git', 'uni-app', 'webpack'],
-      tagOffsets: []
+      tagOffsets: [],
+      scrollProgress: 0,
+      scrollY: 0,
+      playgroundTab: 'particles',
     }
   },
   computed: {
@@ -695,10 +860,21 @@ export default {
     },
     navItems() {
       return [
-        { key: 'about', icon: 'el-icon-s-home' },
-        { key: 'archives', icon: 'el-icon-folder-opened' },
-        { key: 'categories', icon: 'el-icon-paperclip' }
+        { key: 'about', icon: 'el-icon-s-home', type: 'scroll' },
+        { key: 'archives', icon: 'el-icon-folder-opened', type: 'scroll' },
+        { key: 'categories', icon: 'el-icon-paperclip', type: 'scroll' },
+        { key: 'stats', icon: 'el-icon-s-data', type: 'scroll' },
+        { key: 'playground', icon: 'el-icon-video-play', type: 'scroll' },
       ]
+    },
+    playgroundTabs() {
+      return [
+        { key: 'particles', label: this.t('playground.particles'), icon: 'el-icon-s-marketing' },
+        { key: 'dragdrop', label: this.t('playground.dragdrop'), icon: 'el-icon-s-operation' }
+      ]
+    },
+    sideDots() {
+      return this.navItems
     },
     // 国际化方法
     t() {
@@ -762,10 +938,58 @@ export default {
     filteredBlogs() {
       const kw = this.searchKeyword.trim().toLowerCase()
       if (!kw) return this.blogList
-      return this.blogList.filter(b => 
-        b.title.toLowerCase().includes(kw) || 
+      return this.blogList.filter(b =>
+        b.title.toLowerCase().includes(kw) ||
         b.description.toLowerCase().includes(kw)
       )
+    },
+    statItems() {
+      const local = getStats()
+      const articleViews = local ? local.articleViews || {} : {}
+      return Object.entries(articleViews).map(([id, count]) => ({
+        label: id.replace(/^article-/, '文章 '), value: count
+      })).sort((a, b) => b.value - a.value).slice(0, 5)
+    },
+    overviewCards() {
+      const local = getStats()
+      const total = local ? local.totalVisits || 0 : 0
+      const articleCount = Object.keys(local ? local.articleViews || {} : {}).length || this.blogList.length
+      return [
+        { label: this.t('stats.totalVisits'), value: total || 168, icon: 'el-icon-view' },
+        { label: this.t('stats.articleCount'), value: articleCount || 10, icon: 'el-icon-document' },
+        { label: this.t('stats.catTagCount'), value: 12, icon: 'el-icon-collection-tag' },
+        { label: this.t('stats.demoCount'), value: 2, icon: 'el-icon-s-data' }
+      ]
+    },
+    topArticles() {
+      const items = this.statItems
+      return items.length ? items : this.blogList.slice(0, 5).map(b => ({
+        label: b.title.length > 12 ? b.title.slice(0, 12) + '...' : b.title,
+        value: b.views || Math.floor(Math.random() * 50 + 30)
+      }))
+    },
+    categorySegments() {
+      return [
+        { label: 'JavaScript', value: 4 },
+        { label: '工程化', value: 3 },
+        { label: 'CSS', value: 1 },
+        { label: '开发工具', value: 2 }
+      ]
+    },
+    pageViewItems() {
+      const local = getStats()
+      const views = local ? local.pageViews || {} : {}
+      const entries = Object.entries(views).map(([path, count]) => {
+        const isEn = this.locale === 'en'
+        const nameMap = isEn
+          ? { '/home': 'Home', '/archives': 'Archives', '/about': 'About', '/categories': 'Projects', '/stats': 'Stats', '/playground': 'Playground' }
+          : { '/home': '首页', '/archives': '归档', '/about': '关于', '/categories': '项目经历', '/stats': '统计', '/playground': '演示' }
+        return { label: nameMap[path] || path, value: count }
+      }).sort((a, b) => b.value - a.value)
+      if (entries.length) return entries
+      return this.locale === 'en'
+        ? [{ label: 'Home', value: 168 }, { label: 'Archives', value: 72 }, { label: 'About', value: 45 }, { label: 'Projects', value: 38 }]
+        : [{ label: '首页', value: 168 }, { label: '归档', value: 72 }, { label: '关于', value: 45 }, { label: '项目经历', value: 38 }]
     }
   },
   methods: {
@@ -773,6 +997,19 @@ export default {
     getAwardIcon(idx) {
       const icons = ['🏆', '🎖️', '📜', '⭐', '🏅', '✨'];
       return icons[idx % icons.length];
+    },
+    initRevealObserver() {
+      const els = document.querySelectorAll('.reveal-up')
+      if (!els.length) return
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed')
+            observer.unobserve(entry.target)
+          }
+        })
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' })
+      els.forEach(el => observer.observe(el))
     },
     initTimelineObserver() {
       const items = document.querySelectorAll('.timeline-item');
@@ -820,12 +1057,15 @@ export default {
       window.open(routeData.href, '_blank');
     },
     handleScroll() {
-      const scrollY = window.scrollY
-      this.navClass = scrollY > 50 ? 'header-nav-up' : 'header-nav-top'
+      const sY = window.scrollY
+      this.scrollY = sY
+      this.navClass = sY > 50 ? 'header-nav-up' : 'header-nav-top'
       this.updateActiveSection()
+      const docH = document.documentElement.scrollHeight - document.documentElement.clientHeight
+      this.scrollProgress = docH > 0 ? Math.min(100, Math.round((sY / docH) * 100)) : 0
     },
     updateActiveSection() {
-      const sections = ['aboutSection', 'archivesSection', 'categoriesSection']
+      const sections = ['aboutSection', 'archivesSection', 'categoriesSection', 'statsSection', 'playgroundSection']
       let current = 'about'
       for (let i = 0; i < sections.length; i++) {
         const ref = this.$refs[sections[i]]
@@ -840,9 +1080,12 @@ export default {
       this.activeSection = current
     },
     scrollToSection(key) {
-      const map = { about: 'aboutSection', archives: 'archivesSection', categories: 'categoriesSection' }
+      const map = { about: 'aboutSection', archives: 'archivesSection', categories: 'categoriesSection', stats: 'statsSection', playground: 'playgroundSection' }
       const target = this.$refs[map[key]]
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     },
     setSectionRefs() {
       this.$nextTick(() => this.updateActiveSection())
@@ -933,7 +1176,9 @@ export default {
       }
       window.addEventListener('mousemove', onMouseMove)
 
+      let running = true
       const animate = () => {
+        if (!running) return
         ctx.clearRect(0, 0, width, height)
         ctx.fillStyle = 'rgba(255,255,255,0.08)'
         ctx.fillRect(0, 0, width, height)
@@ -944,6 +1189,21 @@ export default {
         this.animationFrame = requestAnimationFrame(animate)
       }
       animate()
+
+      // 不可见时暂停动画，节省 CPU
+      const heroEl = this.$refs.heroSection
+      if (heroEl) {
+        const visObserver = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting && !running) {
+            running = true
+            animate()
+          } else if (!entries[0].isIntersecting && running) {
+            running = false
+            if (this.animationFrame) cancelAnimationFrame(this.animationFrame)
+          }
+        }, { threshold: 0 })
+        visObserver.observe(heroEl)
+      }
     }
   }
 }
@@ -1428,6 +1688,252 @@ export default {
   line-height: 1.6;
 }
 
+/* 滚动进度条 */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--text-accent);
+  z-index: 200;
+  transition: width 0.15s ease;
+}
+
+/* 滚动揭示动画 */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+.reveal-up.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-sub {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  font-size: 14px;
+}
+
+/* 统计卡片 */
+.overview-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 36px;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: var(--card-border);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s ease;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow);
+    border-color: var(--text-accent);
+  }
+}
+.card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  i {
+    font-size: 26px;
+    color: var(--text-accent);
+  }
+}
+.card-value {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.card-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+/* 图表网格 */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 24px;
+}
+.chart-box {
+  background: var(--bg-card);
+  border: var(--card-border);
+  border-radius: 20px;
+  padding: 28px;
+  transition: all 0.3s ease;
+  &:hover {
+    box-shadow: var(--card-shadow);
+  }
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    i { color: var(--text-accent); }
+  }
+}
+
+/* 演示标签 */
+.demo-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.demo-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 40px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--divider);
+  transition: all 0.25s ease;
+  &:hover {
+    border-color: var(--text-accent);
+    color: var(--text-accent);
+    transform: translateY(-1px);
+  }
+  &.active {
+    background: var(--text-accent);
+    color: #fff;
+    border-color: var(--text-accent);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+}
+.demo-content {
+  background: var(--bg-card);
+  border: var(--card-border);
+  border-radius: 20px;
+  padding: 28px;
+  transition: all 0.3s ease;
+  &:hover {
+    box-shadow: var(--card-shadow);
+  }
+}
+
+/* 侧边导航点 */
+.side-dots {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.side-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--divider);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &:hover {
+    background: var(--text-accent);
+    transform: scale(1.4);
+  }
+  &.active {
+    background: var(--text-accent);
+    box-shadow: 0 0 8px var(--text-accent);
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* 回到顶部按钮 */
+.back-to-top {
+  position: fixed;
+  bottom: 160px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: var(--card-border);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 999;
+  font-size: 20px;
+  color: var(--text-accent);
+  transition: all 0.3s ease;
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    background: var(--text-accent);
+    color: #fff;
+  }
+}
+
+/* 页脚 */
+.site-footer {
+  border-top: 1px solid var(--divider);
+  background: var(--bg-card);
+  padding: 36px 24px;
+  margin-top: 80px;
+}
+.footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-bottom: 16px;
+  a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+    &:hover {
+      color: var(--text-accent);
+    }
+  }
+}
+.footer-copy {
+  font-size: 12px;
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .side-dots { display: none; }
+  .back-to-top { bottom: 140px; right: 16px; }
+}
+
 /* 响应式适配 */
 @media (max-width: 900px) {
   .about-precise-grid {
@@ -1703,6 +2209,19 @@ export default {
   }
   .timeline-item:nth-child(even) {
     transform: translateX(0);
+  }
+  .overview-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  .demo-tabs {
+    flex-wrap: wrap;
+  }
+  .demo-tab {
+    font-size: 13px;
+    padding: 8px 16px;
   }
 }
 </style>

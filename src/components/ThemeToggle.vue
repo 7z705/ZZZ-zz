@@ -22,6 +22,7 @@ export default {
       const newTheme = this.isDark ? 'dark' : 'light'
       document.documentElement.setAttribute('data-theme', newTheme)
       localStorage.setItem('app-theme', newTheme)
+      if (this.$bus) this.$bus.$emit('theme-changed', newTheme)
     }
   }
 }

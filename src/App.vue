@@ -32,12 +32,33 @@ export default {
       this.theme = prefersDark ? 'dark' : 'light'
     }
     document.documentElement.setAttribute('data-theme', this.theme)
+    this.trackPageView()
   },
   methods: {
     setTheme(theme) {
       this.theme = theme
       localStorage.setItem('app-theme', theme)
       document.documentElement.setAttribute('data-theme', theme)
+    },
+    trackPageView() {
+      try {
+        const key = 'blog_stats'
+        const raw = localStorage.getItem(key)
+        let stats = raw ? JSON.parse(raw) : { totalVisits: 0, pageViews: {}, articleViews: {}, firstVisit: '', lastVisit: '' }
+        const now = new Date().toISOString().slice(0, 10)
+        if (!stats.firstVisit) stats.firstVisit = now
+        stats.lastVisit = now
+        stats.totalVisits = (stats.totalVisits || 0) + 1
+        const path = this.$route.path || '/home'
+        stats.pageViews = stats.pageViews || {}
+        stats.pageViews[path] = (stats.pageViews[path] || 0) + 1
+        localStorage.setItem(key, JSON.stringify(stats))
+      } catch { /* quota exceeded, ignore */ }
+    }
+  },
+  watch: {
+    '$route.path'() {
+      this.trackPageView()
     }
   }
 }

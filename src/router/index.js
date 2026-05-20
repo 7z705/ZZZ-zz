@@ -13,6 +13,8 @@ const blogAdmin = () => import('../page/blogAdmin')
 const publish = () => import('../page/publish')
 const manage = () => import('../page/manage')
 const edit = () => import('../page/edit')
+const playground = () => import('../page/playground')
+const stats = () => import('../page/stats')
 
 
 Vue.use(VueRouter)
@@ -56,7 +58,15 @@ const router = new VueRouter({
         // 新增独立路由 /archives
         {
             path: '/archives',
-            component: archives,  // 直接使用 archives 组件，无需父级
+            component: archives,
+        },
+        {
+            path: '/playground',
+            component: playground,
+        },
+        {
+            path: '/stats',
+            component: stats,
         },
         {
             path: '/admin',

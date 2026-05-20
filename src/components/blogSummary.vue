@@ -18,7 +18,7 @@
     <p class="content">{{ blogInfo.description }}</p>
     <div class="btn">
       <el-button class="black-white-btn" @click="toDetail">
-        {{ blogInfo.mock ? '示例文章' : '阅读原文' }}<i class="el-icon-right"></i>
+        {{ buttonText }}<i class="el-icon-right"></i>
       </el-button>
     </div>
   </el-card>
@@ -28,6 +28,15 @@
 export default {
   props:['shadow', 'blogInfo'],
   name: 'blogSummary',
+  computed: {
+    buttonText() {
+      const locale = localStorage.getItem('locale') || 'zh'
+      if (locale === 'en') {
+        return this.blogInfo.articleUrl ? 'Read Article' : 'Read More'
+      }
+      return this.blogInfo.articleUrl ? '示例文章' : '阅读原文'
+    }
+  },
   methods: {
     toDetail() {
       if (this.blogInfo.articleUrl) {
