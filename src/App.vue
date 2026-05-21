@@ -9,7 +9,6 @@
 <script>
 import ThemeToggle from './components/ThemeToggle.vue'
 import AIChat from '@/components/AIChat.vue'
-
 export default {
   name: 'App',
   components: { ThemeToggle, AIChat },
@@ -67,7 +66,7 @@ export default {
 <style lang="less">
 /* 日间模式（黑白简约） */
 :root {
-  --bg-page: #F5F7FA;
+  --bg-page: #FFFFFF;
   --bg-card: #FFFFFF;
   --card-border: 1px solid #E2E8F0;
   --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
@@ -110,6 +109,53 @@ body {
   font-family: 'Inter', 'Segoe UI', 'PingFang SC', system-ui, sans-serif;
   color: var(--text-primary);
   transition: background 0.3s, color 0.2s;
+}
+
+.custom-cursor-ball {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #000;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  will-change: left, top;
+  transition: background 0.3s;
+}
+[data-theme="dark"] .custom-cursor-ball {
+  background: #A5F3FC;
+}
+
+.hero-reveal-text {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  font-size: 72px;
+  font-weight: 900;
+  color: #fff;
+  white-space: nowrap;
+  letter-spacing: 2px;
+  pointer-events: none;
+  z-index: 10000;
+  will-change: transform, clip-path;
+  text-shadow: 0 0 8px rgba(255,255,255,0.3);
+}
+
+[data-theme="dark"] .hero-reveal-text {
+  color: #0A0E17;
+  text-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .hero-reveal-text {
+    font-size: 48px !important;
+    white-space: normal !important;
+    width: 90vw;
+  }
 }
 
 #app {

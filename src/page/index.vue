@@ -14,6 +14,12 @@
         </div>
       </div>
       <div class="nav-right">
+        <a class="nav-resume" :href="portfolio.resumeUrl" target="_blank">
+          <i class="el-icon-document"></i> <span>{{ t('hero.resume') }}</span>
+        </a>
+        <a class="nav-github" :href="portfolio.githubUrl" target="_blank">
+          <i class="el-icon-s-cooperation"></i> <span>GitHub</span>
+        </a>
         <el-input
           v-model="searchKeyword"
           :placeholder="t('searchPlaceholder')"
@@ -22,7 +28,6 @@
           class="search-input">
           <i slot="prefix" class="el-icon-search"></i>
         </el-input>
-        <!-- 语言切换按钮 -->
         <div class="lang-switch" @click="toggleLanguage">
           <span :class="{ active: locale === 'zh' }">中</span>
           <span class="separator">/</span>
@@ -31,30 +36,23 @@
       </div>
     </div>
 
-     <!-- Hero 区域（已添加标签点击事件） -->
-    <section class="hero-section" ref="heroSection" @mousemove="handleMouseMove" @mouseleave="resetTextRotation">
-      <canvas ref="heroCanvas" class="hero-canvas"></canvas>
-      <div class="hero-wrapper">
-        <div class="hero-text-3d" :style="text3DStyle">
-          <span class="hero-greeting">{{ t('hero.greeting') }}</span>
-        </div>
-        <!-- 技术栈标签：水平排列，随机上下偏移，点击跳转 -->
-        <div class="hero-tags-row">
-          <span 
-            v-for="(tag, index) in heroTagList" 
-            :key="tag"
-            class="hero-tag"
-            :style="{ transform: `translateY(${tagOffsets[index]}px)` }"
-            @click.stop="goToArticlesByTag(tag)">
-            {{ tag }}
-          </span>
-        </div>
-        <div class="hero-actions">
-          <a class="hero-link" :href="portfolio.githubUrl" target="_blank">{{ t('hero.github') }}</a>
-          <a class="hero-link" :href="portfolio.resumeUrl" target="_blank">{{ t('hero.resume') }}</a>
-        </div>
+     <!-- Hero 区域 -->
+    <section class="hero-section" ref="heroSection">
+      <canvas class="hero-particles" ref="heroParticles"></canvas>
+      <div class="hero-text-wrap">
+        <span id="hero-title" class="hero-greeting">
+          <span
+            v-for="(ch, i) in greetingChars"
+            :key="i"
+            class="hero-char"
+            :style="{ transform: `scale(${charScales[i]})` }"
+          >{{ ch }}</span>
+        </span>
       </div>
     </section>
+
+    <!-- 技术栈互动标签云 -->
+    <TagCloud :tags="heroTagList" @tag-click="goToArticlesByTag" />
 
     <!-- 关于区块（精确 Grid 布局） -->
     <section class="content-section" ref="aboutSection" id="about">
@@ -319,7 +317,9 @@
     <section class="content-section" ref="playgroundSection" id="playground">
       <div class="section-container">
         <h2 class="section-title reveal-up">{{ t('sections.playground') }}</h2>
-        <p class="section-sub reveal-up">交互式 Demo，展示技术能力</p>
+        <p class="section-sub reveal-up">
+          <!-- 交互式 Demo，展示技术能力 -->
+        </p>
 
         <div class="demo-tabs reveal-up">
           <span
@@ -383,6 +383,7 @@ import StatsBar from '../components/StatsBar.vue'
 import StatsCircle from '../components/StatsCircle.vue'
 import ParticlePlayground from '../components/ParticlePlayground.vue'
 import DragDropDemo from '../components/DragDropDemo.vue'
+import TagCloud from '../components/TagCloud.vue'
 
 const AnimatedCount = {
   props: { target: Number, duration: { type: Number, default: 1500 } },
@@ -412,16 +413,14 @@ function getStats() {
 
 export default {
   name: 'index',
-  components: { blogSummary, FlipCard, StatsBar, StatsCircle, ParticlePlayground, DragDropDemo, AnimatedCount },
+  components: { blogSummary, FlipCard, StatsBar, StatsCircle, ParticlePlayground, DragDropDemo, AnimatedCount, TagCloud },
   mounted() {
     // 原有事件监听
     window.addEventListener('scroll', this.handleScroll);
-    this.initHeroCanvas();
+    this.initCustomCursor();
+    this.initHeroParticles();
     this.setSectionRefs();
     this.updateActiveSection();
-
-    // 技术标签随机上下偏移（原有）
-    this.tagOffsets = this.heroTagList.map(() => (Math.random() - 0.5) * 50);
 
     // 读取保存的语言设置（原有）
     const savedLocale = localStorage.getItem('locale');
@@ -453,8 +452,8 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScroll)
-    if (this.animationFrame) cancelAnimationFrame(this.animationFrame)
-    if (this.resizeCanvas) window.removeEventListener('resize', this.resizeCanvas)
+    this.destroyCustomCursor()
+    this.destroyHeroParticles()
   },
   data() {
     return {
@@ -845,10 +844,8 @@ export default {
         githubUrl: 'https://github.com/7z705',
         resumeUrl: '/resume.pdf',
       },
-      animationFrame: null,
       searchKeyword: '',
       heroTagList: ['HTML', 'CSS', 'JavaScript', 'Vue 2/3', 'Node.js', 'Git', 'uni-app', 'webpack'],
-      tagOffsets: [],
       scrollProgress: 0,
       scrollY: 0,
       playgroundTab: 'particles',
@@ -875,6 +872,23 @@ export default {
     },
     sideDots() {
       return this.navItems
+    },
+    revealGreeting() {
+      return this.locale === 'zh' ? 'HELLO，我是 郑瞄瞄' : 'HELLO, I am Zheng Miaomiao'
+    },
+    greetingChars() {
+      return (this.t('hero.greeting') || '').split('')
+    },
+    charScales() {
+      const chars = this.greetingChars
+      const n = chars.length
+      if (n <= 1) return [1]
+      const center = (n - 1) / 2
+      const maxDist = center
+      return chars.map((_, i) => {
+        const dist = Math.abs(i - center) / maxDist
+        return 0.8 + 0.4 * dist * dist
+      })
     },
     // 国际化方法
     t() {
@@ -1090,17 +1104,217 @@ export default {
     setSectionRefs() {
       this.$nextTick(() => this.updateActiveSection())
     },
-    handleMouseMove(e) {
-      const rect = this.$refs.heroSection.getBoundingClientRect()
-      const x = (e.clientX - rect.left) / rect.width - 0.5
-      const y = (e.clientY - rect.top) / rect.height - 0.5
-      const rotateY = x * 25
-      const rotateX = -y * 25
-      this.text3DStyle = { transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)` }
+    initCustomCursor() {
+      const ball = document.createElement('div')
+      ball.className = 'custom-cursor-ball'
+      ball.style.display = 'none'
+      document.body.appendChild(ball)
+      this._cursorBall = ball
+
+      const reveal = document.createElement('span')
+      reveal.className = 'hero-reveal-text'
+      reveal.textContent = this.revealGreeting
+      reveal.style.display = 'none'
+      document.body.appendChild(reveal)
+      this._revealEl = reveal
+
+      const textEl = document.getElementById('hero-title')
+      const heroSection = this.$refs.heroSection
+      if (!textEl || !heroSection) return
+
+      const MAX_ANGLE = 35
+      const SENSITIVITY = 0.3
+      const PERSPECTIVE = 500
+      const LERP = 0.18
+
+      // cached untransformed text rect
+      let baseRect = null
+      const updateBaseRect = () => {
+        const prev = textEl.style.transform
+        textEl.style.transform = ''
+        baseRect = textEl.getBoundingClientRect()
+        textEl.style.transform = prev
+        // position reveal at base text location
+        reveal.style.left = baseRect.left + 'px'
+        reveal.style.top = baseRect.top + 'px'
+      }
+      updateBaseRect()
+
+      const navEl = document.querySelector('.header-nav')
+      const isInHero = (e) => {
+        if (navEl) {
+          const nr = navEl.getBoundingClientRect()
+          if (e.clientY >= nr.top && e.clientY <= nr.bottom) return false
+        }
+        const r = heroSection.getBoundingClientRect()
+        return e.clientX >= r.left && e.clientX <= r.right &&
+               e.clientY >= r.top && e.clientY <= r.bottom
+      }
+
+      // current and target rotation + clip
+      let curRX = 0, curRY = 0, curCX = -100, curCY = -100
+      let targetRX = 0, targetRY = 0, targetCX = -100, targetCY = -100
+      let tx = 0, ty = 0
+      let active = false
+
+      const onMove = (e) => {
+        tx = e.clientX
+        ty = e.clientY
+        if (!isInHero(e)) {
+          active = false
+          targetRX = 0; targetRY = 0
+          targetCX = -100; targetCY = -100
+          return
+        }
+        active = true
+        const cx = baseRect.left + baseRect.width / 2
+        const cy = baseRect.top + baseRect.height / 2
+        targetRY = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, (tx - cx) * SENSITIVITY))
+        targetRX = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, -(ty - cy) * SENSITIVITY))
+        targetCX = tx - baseRect.left
+        targetCY = ty - baseRect.top
+        ball.style.left = tx + 'px'
+        ball.style.top = ty + 'px'
+      }
+
+      const onLeave = () => {
+        active = false
+        targetRX = 0; targetRY = 0
+        targetCX = -100; targetCY = -100
+      }
+
+      let animId
+      const loop = () => {
+        animId = requestAnimationFrame(loop)
+
+        // lerp
+        curRX += (targetRX - curRX) * LERP
+        curRY += (targetRY - curRY) * LERP
+        curCX += (targetCX - curCX) * LERP
+        curCY += (targetCY - curCY) * LERP
+
+        if (active || Math.abs(curRX) > 0.01 || Math.abs(curRY) > 0.01) {
+          ball.style.display = ''
+          reveal.style.display = ''
+          textEl.style.transform = `rotateX(${curRX}deg) rotateY(${curRY}deg)`
+          reveal.style.transform = `perspective(${PERSPECTIVE}px) rotateX(${curRX}deg) rotateY(${curRY}deg)`
+          reveal.style.clipPath = `circle(75px at ${curCX}px ${curCY}px)`
+        } else {
+          ball.style.display = 'none'
+          reveal.style.display = 'none'
+        }
+      }
+      loop()
+
+      // recache rect on resize
+      this._roText = new ResizeObserver(() => { updateBaseRect() })
+      this._roText.observe(textEl)
+
+      document.addEventListener('mousemove', onMove)
+      document.addEventListener('mouseleave', onLeave)
+
+      this._cursorCleanup = () => {
+        cancelAnimationFrame(animId)
+        if (this._roText) this._roText.disconnect()
+        document.removeEventListener('mousemove', onMove)
+        document.removeEventListener('mouseleave', onLeave)
+      }
     },
-    resetTextRotation() {
-      this.text3DStyle = { transform: 'rotateX(0deg) rotateY(0deg)' }
+
+    destroyCustomCursor() {
+      if (this._cursorCleanup) this._cursorCleanup()
+      if (this._cursorBall && this._cursorBall.parentNode) {
+        this._cursorBall.parentNode.removeChild(this._cursorBall)
+      }
+      if (this._revealEl && this._revealEl.parentNode) {
+        this._revealEl.parentNode.removeChild(this._revealEl)
+      }
     },
+
+    initHeroParticles() {
+      const canvas = this.$refs.heroParticles
+      if (!canvas) return
+      const ctx = canvas.getContext('2d')
+      const section = this.$refs.heroSection
+      let w, h
+      const particles = []
+      const count = 60
+
+      const resize = () => {
+        w = section.clientWidth
+        h = section.clientHeight
+        canvas.width = w * (window.devicePixelRatio || 1)
+        canvas.height = h * (window.devicePixelRatio || 1)
+        canvas.style.width = w + 'px'
+        canvas.style.height = h + 'px'
+        ctx.setTransform(1, 0, 0, 1, 0, 0)
+        ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1)
+      }
+      resize()
+
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: 1.2 + Math.random() * 2,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3 - 0.15,
+          opacity: 0.15 + Math.random() * 0.25
+        })
+      }
+
+      let color = document.documentElement.getAttribute('data-theme') === 'dark' ? '255,255,255' : '0,0,0'
+
+      const onThemeChange = () => {
+        color = document.documentElement.getAttribute('data-theme') === 'dark' ? '255,255,255' : '0,0,0'
+      }
+      if (this.$root && this.$root.$on) {
+        this.$root.$on('theme-changed', onThemeChange)
+      }
+
+      let animId
+      const loop = () => {
+        animId = requestAnimationFrame(loop)
+        ctx.clearRect(0, 0, w, h)
+
+        for (const p of particles) {
+          p.x += p.vx
+          p.y += p.vy
+
+          if (p.x < -10) p.x = w + 10
+          if (p.x > w + 10) p.x = -10
+          if (p.y < -10) p.y = h + 10
+          if (p.y > h + 10) p.y = -10
+
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(${color},${p.opacity})`
+          ctx.fill()
+        }
+      }
+      loop()
+
+      this._roParticles = new ResizeObserver(() => {
+        resize()
+        for (const p of particles) {
+          p.x = Math.min(p.x, w)
+          p.y = Math.min(p.y, h)
+        }
+      })
+      this._roParticles.observe(section)
+      this._stopParticles = () => {
+        cancelAnimationFrame(animId)
+        if (this._roParticles) this._roParticles.disconnect()
+        if (this.$root && this.$root.$off) {
+          this.$root.$off('theme-changed', onThemeChange)
+        }
+      }
+    },
+
+    destroyHeroParticles() {
+      if (this._stopParticles) this._stopParticles()
+    },
+
     grayscaleBlog(id) {
       const el = document.querySelector(`.blog-item-wrapper[data-id="${id}"]`)
       if (el) {
@@ -1108,103 +1322,6 @@ export default {
         setTimeout(() => { el.style.filter = '' }, 500)
       }
     },
-    initHeroCanvas() { /* 保持原有Canvas动画逻辑不变 */ 
-      const canvas = this.$refs.heroCanvas
-      if (!canvas) return
-      const ctx = canvas.getContext('2d')
-      let width = window.innerWidth
-      let height = window.innerHeight
-      let particles = []
-      let mouseX = width/2, mouseY = height/2
-      const PARTICLE_COUNT = 150
-
-      const resize = () => {
-        width = window.innerWidth
-        height = window.innerHeight
-        canvas.width = width
-        canvas.height = height
-      }
-      window.addEventListener('resize', resize)
-      this.resizeCanvas = resize
-      resize()
-
-      class Particle {
-        constructor() {
-          this.x = Math.random() * width
-          this.y = Math.random() * height
-          this.size = Math.random() * 2.5 + 1
-          this.speedX = (Math.random() - 0.5) * 1.2
-          this.speedY = (Math.random() - 0.5) * 1.2
-          this.color = `hsl(${Math.random() * 60 + 180}, 70%, 65%)`
-          this.originalX = this.x
-          this.originalY = this.y
-        }
-        update() {
-          const dx = mouseX - this.x
-          const dy = mouseY - this.y
-          const dist = Math.sqrt(dx*dx + dy*dy)
-          if (dist < 150) {
-            const angle = Math.atan2(dy, dx)
-            const force = (150 - dist) / 150 * 2.5
-            this.x -= Math.cos(angle) * force
-            this.y -= Math.sin(angle) * force
-          } else {
-            this.x += (this.originalX - this.x) * 0.02
-            this.y += (this.originalY - this.y) * 0.02
-          }
-          if (this.x < 0) this.x = 0
-          if (this.x > width) this.x = width
-          if (this.y < 0) this.y = 0
-          if (this.y > height) this.y = height
-        }
-        draw() {
-          ctx.beginPath()
-          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
-          ctx.fillStyle = this.color
-          ctx.fill()
-        }
-      }
-
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push(new Particle())
-      }
-
-      const onMouseMove = (e) => {
-        const rect = canvas.getBoundingClientRect()
-        mouseX = e.clientX - rect.left
-        mouseY = e.clientY - rect.top
-      }
-      window.addEventListener('mousemove', onMouseMove)
-
-      let running = true
-      const animate = () => {
-        if (!running) return
-        ctx.clearRect(0, 0, width, height)
-        ctx.fillStyle = 'rgba(255,255,255,0.08)'
-        ctx.fillRect(0, 0, width, height)
-        particles.forEach(p => {
-          p.update()
-          p.draw()
-        })
-        this.animationFrame = requestAnimationFrame(animate)
-      }
-      animate()
-
-      // 不可见时暂停动画，节省 CPU
-      const heroEl = this.$refs.heroSection
-      if (heroEl) {
-        const visObserver = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting && !running) {
-            running = true
-            animate()
-          } else if (!entries[0].isIntersecting && running) {
-            running = false
-            if (this.animationFrame) cancelAnimationFrame(this.animationFrame)
-          }
-        }, { threshold: 0 })
-        visObserver.observe(heroEl)
-      }
-    }
   }
 }
 </script>
@@ -1224,12 +1341,13 @@ export default {
   z-index: 100;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   padding: 12px 5%;
   background: rgba(255,255,255,0.96);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--divider);
   transition: all 0.3s;
+  cursor: auto;
 }
 [data-theme="dark"] .header-nav {
   background: rgba(18, 26, 39, 0.96);
@@ -1257,15 +1375,14 @@ export default {
   }
 }
 .nav-right {
-  position: absolute;
-  right: 5%;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   width: auto;
+  flex-shrink: 0;
 }
 .search-input {
-  width: 200px;
+  width: 160px;
 }
 .search-input /deep/ .el-input__inner {
   border-radius: 40px;
@@ -1303,18 +1420,15 @@ export default {
 /* Hero 区域 */
 .hero-section {
   position: relative;
-  height: 85vh;
-  min-height: 600px;
-  overflow: hidden;
+  height: 100vh;
+  min-height: 700px;
+  cursor: none;
 }
-.hero-canvas {
+.hero-particles {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
+  inset: 0;
   pointer-events: none;
+  z-index: 0;
 }
 .hero-wrapper {
   position: relative;
@@ -1322,106 +1436,61 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
   width: 100%;
-  pointer-events: none;
-}
-.hero-text-3d {
-  text-align: center;
-  width: 100%;
-  margin-bottom: 40px;
-  pointer-events: none;
-  transform-style: preserve-3d;
-  transition: transform 0.05s linear;
-  .hero-greeting {
-    display: inline-block;
-    font-size: 120px;
-    font-weight: 900;
-    color: #000000;
-    white-space: nowrap;
-    text-shadow: 0 0 10px rgba(0,0,0,0.1);
-    letter-spacing: 2px;
-    transform: translateY(120px);
-  }
-}
-[data-theme="dark"] .hero-greeting {
-  color: #FFFFFF;
-  text-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 
-/* 技术栈标签行 */
-.hero-tags-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  margin: 20px 0 10px;
-  padding: 90px 20px;
-  width: 100%;
-  pointer-events: auto;
-}
-.hero-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 85px;
-  height: 85px;
-  background-color: #ffffff;
-  color: #000000;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+.hero-text-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  perspective: 500px;
   text-align: center;
-  cursor: pointer;
-  word-break: break-word;
-  white-space: normal;
-  padding: 8px;
-  box-sizing: border-box;
-  line-height: 1.3;
-  transition: all 0.2s ease;
-  border: 1px solid #e0e0e0;
+}
+
+.hero-greeting {
+  display: inline-block;
+  font-size: 72px;
+  font-weight: 900;
+  color: #000;
+  white-space: nowrap;
+  letter-spacing: 2px;
+  transform-style: preserve-3d;
   will-change: transform;
 }
-.hero-tag:hover {
-  background-color: #000000;
-  color: #ffffff;
-  border-color: #000000;
-  transform: scale(1.05) translateY(0) !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+
+.hero-char {
+  display: inline-block;
+  transform-origin: center center;
+  transition: transform 0.3s ease, color 0.3s;
 }
-[data-theme="dark"] .hero-tag {
-  background-color: #2d2d2d;
-  color: #f0f0f0;
-  border-color: #444;
+[data-theme="dark"] .hero-greeting {
+  color: #fff;
 }
-[data-theme="dark"] .hero-tag:hover {
-  background-color: #ffffff;
-  color: #000000;
-  border-color: #ffffff;
-}
-.hero-actions {
+
+/* 导航栏快捷链接 */
+.nav-resume, .nav-github {
   display: flex;
-  gap: 20px;
-  margin-top: 8px;
-  pointer-events: auto;
-}
-.hero-link {
-  padding: 10px 24px;
-  border-radius: 48px;
-  background: var(--bg-card);
-  border: 1px solid var(--divider);
-  color: var(--text-primary);
-  text-decoration: none;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 40px;
+  font-size: 12px;
   font-weight: 500;
+  text-decoration: none;
+  color: var(--text-secondary);
   transition: 0.2s;
+  border: 1px solid var(--divider);
+  white-space: nowrap;
+  cursor: pointer;
   &:hover {
-    background: var(--btn-bg);
-    color: white;
-    transform: translateY(-2px);
+    color: var(--text-accent);
+    border-color: var(--text-accent);
+    background: var(--accent-light);
   }
+}
+.nav-github i, .nav-resume i {
+  font-size: 14px;
 }
 
 /* 其余区块样式（完全保持原样） */
@@ -1952,42 +2021,23 @@ export default {
     white-space: normal !important;
     width: 90vw;
   }
-  .hero-tag {
-    width: 70px;
-    height: 70px;
-    font-size: 12px;
-  }
-  .hero-tags-row {
-    gap: 15px;
-  }
 }
 @media (max-width: 768px) {
   .nav-menu span {
     display: none;
   }
   .nav-right {
-    gap: 8px;
+    gap: 6px;
+  }
+  .nav-resume span, .nav-github span {
+    display: none;
   }
   .search-input {
-    width: 140px;
-  }
-  .hero-actions {
-    flex-direction: column;
-    align-items: center;
+    width: 120px;
   }
   .info-grid-large {
     grid-template-columns: 1fr;
     gap: 12px;
-  }
-  .hero-tag {
-    width: 60px;
-    height: 60px;
-    font-size: 11px;
-    padding: 4px;
-  }
-  .hero-tags-row {
-    gap: 12px;
-    margin: 15px 0 8px;
   }
 }
 .nav-right .search-input /deep/ .el-input__prefix {

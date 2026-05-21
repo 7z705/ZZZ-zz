@@ -2,7 +2,9 @@
   <div class="playground-page">
     <div class="playground-container">
       <h1 class="page-title">在线演示</h1>
-      <p class="page-subtitle">交互式 Demo，展示项目中的技术能力</p>
+      <p class="page-subtitle">
+        <!-- 交互式 Demo，展示项目中的技术能力 -->
+      </p>
 
       <div class="demo-tabs">
         <span
